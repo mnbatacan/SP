@@ -13,7 +13,7 @@ youtube = build(YOUTUBE_API_SERVICE_NAME, YOUTUBE_API_VERSION, developerKey=DEVE
 def remove_empty_kwargs(**kwargs):
   good_kwargs = {}
   if kwargs is not None:
-    for key, value in kwargs.iteritems():
+    for key, value in kwargs.items():
       if value:
         good_kwargs[key] = value
   return good_kwargs
@@ -29,7 +29,7 @@ def videos_list_by_id(**kwargs):
   return response
 
 
-def youtube_search(q, max_results=50,order="relevance", token=None, location=None, location_radius=None):
+def youtube_search(q, max_results=1,order="relevance", token=None, location=None, location_radius=None):
 
   # youtube = build(YOUTUBE_API_SERVICE_NAME, YOUTUBE_API_VERSION,
   #   developerKey=DEVELOPER_KEY)

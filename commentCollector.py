@@ -1,9 +1,15 @@
-import sys
-sys.path.append("/home/mnbatacan/Documents/youtube_tutorial")
+
 from youtube_videos import youtube_search
 from youtube_videos import get_comment_threads
 # import pandas as pd
+import string; print(string.__file__)
 import json
+
+
+# from nltk.stem import PorterStemmer
+# from nltk.tokenize import sent_tokenize, word_tokenize
+# import contractions
+# from sklearn.feature_extraction.text import CountVectorizer
 
 
 video_dict = {'youID':[], 'title':[], 'pub_date':[]}
@@ -11,7 +17,9 @@ video_dict = {'youID':[], 'title':[], 'pub_date':[]}
 comments_list = []
 
 
-
+def preprocess_text(text):
+    translator = str.maketrans('', '', string.punctuation)
+    return text.strip().lower().translate(translator)
 
 def grab_videos(keyword, token=None):
     res = youtube_search(keyword, token=token)
@@ -31,6 +39,10 @@ def grab_videos(keyword, token=None):
                 comment = item["snippet"]["topLevelComment"]
                 author = comment["snippet"]["authorDisplayName"]
                 text = comment["snippet"]["textDisplay"]
+
+                # Preprocessing ---------------------------------------------------------------
+                text =  preprocess_text(text)
+                #-------------- ---------------------------------------------------------------
                 print(text)
                 comments_list.append(text)
         # print "added " + str(len(videos)) + " videos to a total of " + str(len(video_dict['youID']))
@@ -52,10 +64,6 @@ print("\n\nTotal number of comments: " + str(len(comments_list)))
 
 
 
-
-
-
-
 # # Iterate through comments gathered
 # for comment in comments_list:
 #   print(comment) 
@@ -63,4 +71,8 @@ print("\n\nTotal number of comments: " + str(len(comments_list)))
 # print video_dict
 # while token != "last_page":
 #   token = grab_videos("spinners", token=token)
+
+
+# -----------------------------------------------------------------------------------------------
+
 
