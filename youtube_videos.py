@@ -9,13 +9,31 @@ YOUTUBE_API_VERSION = "v3"
 youtube = build(YOUTUBE_API_SERVICE_NAME, YOUTUBE_API_VERSION, developerKey=DEVELOPER_KEY)
 
 
+# Remove keyword arguments that are not set
+def remove_empty_kwargs(**kwargs):
+  good_kwargs = {}
+  if kwargs is not None:
+    for key, value in kwargs.iteritems():
+      if value:
+        good_kwargs[key] = value
+  return good_kwargs
+
+def videos_list_by_id(**kwargs):
+  # See full sample for function
+  kwargs = remove_empty_kwargs(**kwargs)
+
+  response = youtube.videos().list(
+    **kwargs
+  ).execute()
+
+  return response
 
 
-def youtube_search(q, max_results=1,order="relevance", token=None, location=None, location_radius=None):
+def youtube_search(q, max_results=50,order="relevance", token=None, location=None, location_radius=None):
 
   # youtube = build(YOUTUBE_API_SERVICE_NAME, YOUTUBE_API_VERSION,
   #   developerKey=DEVELOPER_KEY)
-
+  vidId=0
   search_response = youtube.search().list(
     q=q,
     type="video",
@@ -30,11 +48,18 @@ def youtube_search(q, max_results=1,order="relevance", token=None, location=None
 
 
 
+
+
   videos = []
 
   for search_result in search_response.get("items", []):
     if search_result["id"]["kind"] == "youtube#video":
-      videos.append(search_result)
+
+      vidDetails = videos_list_by_id(part='statistics', id=search_result["id"]["videoId"])
+      # print((vidDetails['items'][0]["statistics"]))
+      if (vidDetails['items'][0]["statistics"]["commentCount"]) != None: 
+        print((vidDetails['items'][0]["statistics"]))
+        videos.append(search_result)
   try:
       nexttok = search_response["nextPageToken"]
       return(nexttok, videos)
@@ -54,7 +79,7 @@ def get_comments(youtube, video_id, channel_id):
     comment = item["snippet"]["topLevelComment"]
     author = comment["snippet"]["authorDisplayName"]
     text = comment["snippet"]["textDisplay"]
-    print "Comment by %s: %s" % (author, text)
+    # print "Comment by %s: %s" % (author, text)
 
   return results["items"]
 
@@ -64,13 +89,6 @@ def get_comment_threads(video_id):
     videoId=video_id,
     textFormat="plainText"
   ).execute()
-
-  for item in results["items"]:
-    comment = item["snippet"]["topLevelComment"]
-    author = comment["snippet"]["authorDisplayName"]
-    text = comment["snippet"]["textDisplay"]
-    print "Comment by %s: %s" % (author, text)
-
   return results["items"]
 
 
