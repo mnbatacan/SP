@@ -6,20 +6,66 @@ import string; print(string.__file__)
 import json
 
 
+
 # from nltk.stem import PorterStemmer
+# import nltk
 # from nltk.tokenize import sent_tokenize, word_tokenize
 # import contractions
 # from sklearn.feature_extraction.text import CountVectorizer
+import re, string, unicodedata
+import nltk
+nltk.download('stopwords')
+import contractions
+# import inflect
+from bs4 import BeautifulSoup
+from nltk import word_tokenize, sent_tokenize
+from nltk.corpus import stopwords
+from nltk.stem import LancasterStemmer, WordNetLemmatizer
 
 
 video_dict = {'youID':[], 'title':[], 'pub_date':[]}
 # video_comment_threads = []
 comments_list = []
+words = []
+stems=[]
+lemmas = []
 
 
 def preprocess_text(text):
     translator = str.maketrans('', '', string.punctuation)
     return text.strip().lower().translate(translator)
+
+def replace_contractions(text):
+    """Replace contractions in string of text"""
+    return contractions.fix(text)
+
+def remove_stopwords(words):
+    """Remove stop words from list of tokenized words"""
+    new_words = []
+    for word in words:
+        if word not in stopwords.words('english'):
+            new_words.append(word)
+    return new_words
+
+def stem_words(words):
+    """Stem words in list of tokenized words"""
+    stemmer = LancasterStemmer()
+    stems = []
+    for word in words:
+        stem = stemmer.stem(word)
+        stems.append(stem)
+    return stems
+
+def lemmatize_verbs(words):
+    """Lemmatize verbs in list of tokenized words"""
+    lemmatizer = WordNetLemmatizer()
+    lemmas = []
+    for word in words:
+        lemma = lemmatizer.lemmatize(word, pos='v')
+        lemmas.append(lemma)
+    return lemmas
+
+
 
 def grab_videos(keyword, token=None):
     res = youtube_search(keyword, token=token)
@@ -41,7 +87,17 @@ def grab_videos(keyword, token=None):
                 text = comment["snippet"]["textDisplay"]
 
                 # Preprocessing ---------------------------------------------------------------
-                text =  preprocess_text(text)
+                text =  replace_contractions(preprocess_text(text))
+                temp = nltk.word_tokenize(text)
+                temp = remove_stopwords(temp)
+                words.append(temp)
+                stem = stem_words(temp)
+                lemm = lemmatize_verbs(temp)
+                stems.append(stem)
+                lemmas.append(lemm)
+
+
+
                 #-------------- ---------------------------------------------------------------
                 print(text)
                 comments_list.append(text)
@@ -60,6 +116,16 @@ token = grab_videos("fortnite")
 
 
 print("\n\nTotal number of comments: " + str(len(comments_list)))
+
+print(words)
+print("\n\n")
+
+print(stems)
+print("\n\n")
+print(lemmas)
+print("\n\n")
+
+print("\n\nTotal number of words: " + str(len(words)))
 
 
 
