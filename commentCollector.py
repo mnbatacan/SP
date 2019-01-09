@@ -81,18 +81,15 @@ def preproccessing(text):
     # stem_words(word_set['dictionary'])
     temp = lemmatize_verbs(remove_stopwords(temp))
     for word in temp:
-        # if word in dictionary: 
+        if word in dictionary: 
+            if curr_doc_count in dictionary[word]: continue
         dictionary.setdefault(word, []).append(curr_doc_count)
-        # else: 
-        #     dictionary[word] = curr_doc_count
-        #     curr_doc_count += 1
-    curr_doc_count += 1
-    return curr_doc_count
     # print(temp)
 
 
 
 def grab_videos(keyword, token=None):
+    global dataset_file, curr_doc_count
     res = youtube_search(keyword, token=token)
     # statistics.commentCount 
     if(res != 0):
@@ -119,7 +116,10 @@ def grab_videos(keyword, token=None):
 
 
                 #-------------- ---------------------------------------------------------------
-                print(text)
+                print("COUNT:" + str(curr_doc_count)+ " " + text)
+                dataset_file.write("COUNT:" + str(curr_doc_count)+ " " +text+'\n')
+                curr_doc_count += 1
+
                 comments_list.append(text)
         # print "added " + str(len(videos)) + " videos to a total of " + str(len(video_dict['youID']))
         return token
@@ -127,6 +127,7 @@ def grab_videos(keyword, token=None):
 
 
 
+dataset_file  = open("dataset.txt", "r+") 
 
 # ---------------------------------------------------------------------------------------------
 # To search a video
