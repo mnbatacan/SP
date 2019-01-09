@@ -14,13 +14,14 @@ import json
 # from sklearn.feature_extraction.text import CountVectorizer
 import re, string, unicodedata
 import nltk
-nltk.download('stopwords')
+# nltk.download('stopwords')
 import contractions
 # import inflect
 from bs4 import BeautifulSoup
 from nltk import word_tokenize, sent_tokenize
 from nltk.corpus import stopwords
-from nltk.stem import LancasterStemmer, WordNetLemmatizer
+from nltk.stem import LancasterStemmer, WordNetLemmatizer, PorterStemmer
+import textblob as tb
 
 
 video_dict = {'youID':[], 'title':[], 'pub_date':[]}
@@ -30,6 +31,10 @@ words = []
 stems=[]
 lemmas = []
 
+curr_doc_count = 0
+
+word_set = {'words': [], 'stemmed':[], 'lemmatized':[]}
+dictionary = dict()
 
 def preprocess_text(text):
     translator = str.maketrans('', '', string.punctuation)
@@ -44,17 +49,20 @@ def remove_stopwords(words):
     new_words = []
     for word in words:
         if word not in stopwords.words('english'):
-            new_words.append(word)
+            w = tb.Word(word)
+            word_set["words"].append(w.correct())
+            new_words.append(w.correct())
     return new_words
 
 def stem_words(words):
     """Stem words in list of tokenized words"""
-    stemmer = LancasterStemmer()
-    stems = []
+    stemmer = PorterStemmer()
+    # words = word_tokenize(words)
+    # stems = []
     for word in words:
         stem = stemmer.stem(word)
-        stems.append(stem)
-    return stems
+        word_set["stemmed"].append(stem)
+    # return stems
 
 def lemmatize_verbs(words):
     """Lemmatize verbs in list of tokenized words"""
@@ -62,8 +70,25 @@ def lemmatize_verbs(words):
     lemmas = []
     for word in words:
         lemma = lemmatizer.lemmatize(word, pos='v')
+        word_set["lemmatized"].append(lemma)
         lemmas.append(lemma)
     return lemmas
+
+def preproccessing(text):
+    global curr_doc_count
+    text =  replace_contractions(preprocess_text(text))
+    temp = nltk.word_tokenize(text)
+    # stem_words(word_set['dictionary'])
+    temp = lemmatize_verbs(remove_stopwords(temp))
+    for word in temp:
+        # if word in dictionary: 
+        dictionary.setdefault(word, []).append(curr_doc_count)
+        # else: 
+        #     dictionary[word] = curr_doc_count
+        #     curr_doc_count += 1
+    curr_doc_count += 1
+    return curr_doc_count
+    # print(temp)
 
 
 
@@ -87,14 +112,9 @@ def grab_videos(keyword, token=None):
                 text = comment["snippet"]["textDisplay"]
 
                 # Preprocessing ---------------------------------------------------------------
-                text =  replace_contractions(preprocess_text(text))
-                temp = nltk.word_tokenize(text)
-                temp = remove_stopwords(temp)
-                words.append(temp)
-                stem = stem_words(temp)
-                lemm = lemmatize_verbs(temp)
-                stems.append(stem)
-                lemmas.append(lemm)
+                preproccessing(text)
+                # word_set['words'][1].apply(lambda x: str(TextBlob(x).correct()))
+                # apply(lambda x: str(TextBlob(x).correct()))
 
 
 
@@ -111,21 +131,32 @@ def grab_videos(keyword, token=None):
 # ---------------------------------------------------------------------------------------------
 # To search a video
 token = grab_videos("jake paul")
-token = grab_videos("fortnite")
+# token = grab_videos("fortnite")
+
+
+# Stemm and lemmatize the words collected
+
+
 # ---------------------------------------------------------------------------------------------
+
+
+
 
 
 print("\n\nTotal number of comments: " + str(len(comments_list)))
 
-print(words)
-print("\n\n")
+# print(word_set['W'])
+# print("\n\n")
 
-print(stems)
-print("\n\n")
-print(lemmas)
-print("\n\n")
+# print(word_set['stemmed'])
+# print("\n\n")
+# print(word_set['lemmatized'])
+# print("\n\n")
 
-print("\n\nTotal number of words: " + str(len(words)))
+# print("\n\nTotal number of words: " + str(len(word_set['dictionary'])))
+
+for key,val in dictionary.items():
+    print(key, "=>", val)
 
 
 
