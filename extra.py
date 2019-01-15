@@ -4,10 +4,9 @@ from youtube_videos import get_comment_threads
 # import pandas as pd
 import string; print(string.__file__)
 import json
-import emoji
 import time
 import multiprocessing
-
+import emoji
 
 
 # from nltk.stem import PorterStemmer
@@ -28,17 +27,8 @@ import textblob as tb
 from bs4 import BeautifulSoup
 
 
-video_dict = {'youID':[], 'title':[], 'pub_date':[]}
-# video_comment_threads = []
-comments_list = []
-words = []
-stems=[]
-lemmas = []
 
-curr_doc_count = 0
 
-word_set = {'words': [], 'stemmed':[], 'lemmatized':[]}
-dictionary = dict()
 
 def strip_html(text):
     # soup = BeautifulSoup(text, "html.parser")
@@ -84,15 +74,15 @@ def lemmatize_verbs(words):
         lemmas.append(lemma)
     return lemmas
 
+def write_file(text):
+    with open("dataset.txt", "a") as text_file:
+        text_file.write(text+"\n")
     
 def remove_emoji(text):
     return emoji.get_emoji_regexp().sub(u'', text)
 
-def preproccessing(text):
-    global curr_doc_count, dictionary
-    text = strip_html(remove_emoji(text))
-    # print("hey: " + text)
-    text =  replace_contractions(preprocess_text(text))
+def append_dictionary(text):
+    global dictionary
     temp = nltk.word_tokenize(text)
     # stem_words(word_set['dictionary'])
 
@@ -103,13 +93,21 @@ def preproccessing(text):
         # if word in dictionary: 
         #     if curr_doc_count in dictionary[word]: continue
         dictionary.setdefault(word, []).append(curr_doc_count)
+        print(len(dictionary))
     # ----------------------------------------------------------------
-    return text
+    return
 
-
+def preproccessing(text):
+    global curr_doc_count, dictionary
+    text = strip_html(remove_emoji(text))
+    # print("hey: " + text)
+    text =  replace_contractions(preprocess_text(text))
+    write_file(text)
+    append_dictionary(text)
 
 def grab_videos(keyword, token=None):
-    global dataset_file, curr_doc_count
+    global dataset_file, curr_doc_count, curr_text
+    # write_file("asdsd")
     res = youtube_search(keyword, token=token)
     # statistics.commentCount 
     if(res != 0):
@@ -129,15 +127,27 @@ def grab_videos(keyword, token=None):
                 text = comment["snippet"]["textDisplay"]
 
                 # Preprocessing ---------------------------------------------------------------
-                text = preproccessing(text)
-                # word_set['words'][1].apply(lambda x: str(TextBlob(x).correct()))
-                # apply(lambda x: str(TextBlob(x).correct()))
+                # text = preproccessing(text)
+                print("start")
+                p = multiprocessing.Process(target=preproccessing, name="preproccessing", args=(text,))
+                p.start()
+
+                # Wait 10 seconds for foo
+                # time.sleep(10)
+                p.join(120)
+                if p.is_alive():
+                    print("foo is running... let's kill it...")
+
+                    # Terminate foo
+                    p.terminate()
+                    p.join()
 
 
 
                 #-------------- ---------------------------------------------------------------
                 print("COUNT:" + str(curr_doc_count)+ " " + text)
-                dataset_file.write(text+'\n')
+                # print("----------------------",str(len(dictionary)))
+                # dataset_file.write(text+'\n')
                 curr_doc_count += 1
 
                 comments_list.append(text)
@@ -147,13 +157,42 @@ def grab_videos(keyword, token=None):
 
 
 
-dataset_file  = open("dataset.txt", "w") 
+
+
+
+
+video_dict = {'youID':[], 'title':[], 'pub_date':[]}
+# video_comment_threads = []
+comments_list = []
+words = []
+stems=[]
+lemmas = []
+
+curr_doc_count = 0
+
+curr_text = " "
+word_set = {'words': [], 'stemmed':[], 'lemmatized':[]}
+dictionary = dict()
+
+emoji_pattern = re.compile(u'['
+        u'\U0001F300-\U0001F64F'
+        u'\U0001F680-\U0001F6FF'
+        u'\u2600-\u26FF\u2700-\u27BF]+', 
+        re.UNICODE)
+
+
+
+
+
+
+
+# dataset_file  = open("dataset.txt", "w") 
 
 # ---------------------------------------------------------------------------------------------
 # To search a video
-token = grab_videos("elections")
-token = grab_videos("logan paul")
-token = grab_videos("youtube rewind")
+# token = grab_videos("jake paul")
+# token = grab_videos("logan paul")
+token = grab_videos("justin bieber")
 
 
 # Stemm and lemmatize the words collected
@@ -166,16 +205,19 @@ token = grab_videos("youtube rewind")
 
 
 print("\n\nTotal number of comments: " + str(len(comments_list)))
-dataset_file.write(str(len(comments_list))+'\n')
-dataset_file.write(str(len(dictionary))+'\n')
+write_file(str(len(comments_list)))
+write_file(str(len(dictionary)))
 
 
-with open('dictionary.txt', 'w') as dictionary_file:
-    dictionary_file.write(json.dumps(dictionary))
+dictionary_file = open('dictionary.txt', 'w')
+dictionary_file.write("qweqweqweqwe")
+# with open('dictionary.txt', 'w') as dictionary_file:
+dictionary_file.write(json.dumps(dictionary))
 
 
 
-
+# dataset_file.close()
+dictionary_file.close()
 # # Iterate through comments gathered
 # for comment in comments_list:
 #   print(comment) 
