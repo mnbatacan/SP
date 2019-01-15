@@ -144,7 +144,8 @@ dataset_file  = open("dataset.txt", "w")
 
 # ---------------------------------------------------------------------------------------------
 # To search a video
-token = grab_videos("jake paul")
+# token = grab_videos("jake paul")
+# token = grab_videos("youtube rewind")
 # token = grab_videos("fortnite")
 
 
@@ -158,19 +159,12 @@ token = grab_videos("jake paul")
 
 
 print("\n\nTotal number of comments: " + str(len(comments_list)))
+dataset_file.write(str(len(comments_list))+'\n')
+dataset_file.write(str(len(dictionary))+'\n')
 
-# print(word_set['W'])
-# print("\n\n")
 
-# print(word_set['stemmed'])
-# print("\n\n")
-# print(word_set['lemmatized'])
-# print("\n\n")
-
-# print("\n\nTotal number of words: " + str(len(word_set['dictionary'])))
-
-for key,val in dictionary.items():
-    print(key, "=>", val)
+with open('dictionary.txt', 'w') as dictionary_file:
+    dictionary_file.write(json.dumps(dictionary))
 
 
 
