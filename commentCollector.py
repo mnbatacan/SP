@@ -152,8 +152,8 @@ dataset_file  = open("dataset.txt", "w")
 # ---------------------------------------------------------------------------------------------
 # To search a video
 token = grab_videos("elections")
-token = grab_videos("logan paul")
-token = grab_videos("youtube rewind")
+# token = grab_videos("logan paul")
+# token = grab_videos("youtube rewind")
 
 
 # Stemm and lemmatize the words collected

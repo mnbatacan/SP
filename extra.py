@@ -129,8 +129,8 @@ def grab_videos(keyword, token=None):
                 # Preprocessing ---------------------------------------------------------------
                 # text = preproccessing(text)
                 print("start")
-                p = multiprocessing.Process(target=preproccessing, name="preproccessing", args=(text,))
-                p.start()
+                p = multiprocessing.Process(target=preproccessing, name="preproccessing", args=(text,)
+)                p.start()
 
                 # Wait 10 seconds for foo
                 # time.sleep(10)
@@ -210,7 +210,7 @@ write_file(str(len(dictionary)))
 
 
 dictionary_file = open('dictionary.txt', 'w')
-dictionary_file.write("qweqweqweqwe")
+# dictionary_file.write("qweqweqweqwe")
 # with open('dictionary.txt', 'w') as dictionary_file:
 dictionary_file.write(json.dumps(dictionary))
 
