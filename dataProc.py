@@ -21,26 +21,34 @@ def reading():
         s = f.read()
         dictionary = ast.literal_eval(s)
     return dictionary
+
+def removekey(d, key):
+    r = dict(d)
+    del r[key]
+    return r
 # ---------------------------------------------------------------------
 
 
-# GLOBAL VARIABLES-----------------------------------------------------
 no_of_docs = int(dataset[len(dataset)-2])
 no_of_dictionary = int(dataset[len(dataset)-1])
 dictionary = reading()
-bag_of_words = numpy.zeros(shape=(no_of_dictionary,no_of_docs))
 
+# Remove dictionary items with less than 2 ocurrence on all document
+for key in dictionary:
+	if len(dictionary[key]) < 2:
+		dictionary = removekey(dictionary,key)
+print(dictionary)
+
+
+# Creates the bag of words
+bag_of_words = numpy.zeros(shape=(no_of_dictionary,no_of_docs))
 
 counter = 0
 for key in dictionary:
-	# print(dictionary[key])
 	for val in dictionary[key]:
 		bag_of_words[counter][val] += 1
 	counter += 1
-
-print(bag_of_words[12])
-
-# ---------------------------------------------------------------------
+print(bag_of_words[0])
 
 
 
