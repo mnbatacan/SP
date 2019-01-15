@@ -22,6 +22,7 @@ from nltk import word_tokenize, sent_tokenize
 from nltk.corpus import stopwords
 from nltk.stem import LancasterStemmer, WordNetLemmatizer, PorterStemmer
 import textblob as tb
+from bs4 import BeautifulSoup
 
 
 video_dict = {'youID':[], 'title':[], 'pub_date':[]}
@@ -35,6 +36,12 @@ curr_doc_count = 0
 
 word_set = {'words': [], 'stemmed':[], 'lemmatized':[]}
 dictionary = dict()
+
+def strip_html(text):
+    # soup = BeautifulSoup(text, "html.parser")
+    # line = soup.get_text()
+    # line = line.split()
+    return ' '.join(text.split())
 
 def preprocess_text(text):
     translator = str.maketrans('', '', string.punctuation)
@@ -76,15 +83,21 @@ def lemmatize_verbs(words):
 
 def preproccessing(text):
     global curr_doc_count
+    text = strip_html(text)
+    # print("hey: " + text)
     text =  replace_contractions(preprocess_text(text))
     temp = nltk.word_tokenize(text)
     # stem_words(word_set['dictionary'])
+
+    # ----------------------------------------------------------------
+    # Lemmatizing and tracking of word in documents
     temp = lemmatize_verbs(remove_stopwords(temp))
     for word in temp:
-        if word in dictionary: 
-            if curr_doc_count in dictionary[word]: continue
+        # if word in dictionary: 
+        #     if curr_doc_count in dictionary[word]: continue
         dictionary.setdefault(word, []).append(curr_doc_count)
-    # print(temp)
+    # ----------------------------------------------------------------
+    return text
 
 
 
@@ -109,7 +122,7 @@ def grab_videos(keyword, token=None):
                 text = comment["snippet"]["textDisplay"]
 
                 # Preprocessing ---------------------------------------------------------------
-                preproccessing(text)
+                text = preproccessing(text)
                 # word_set['words'][1].apply(lambda x: str(TextBlob(x).correct()))
                 # apply(lambda x: str(TextBlob(x).correct()))
 
@@ -117,7 +130,7 @@ def grab_videos(keyword, token=None):
 
                 #-------------- ---------------------------------------------------------------
                 print("COUNT:" + str(curr_doc_count)+ " " + text)
-                dataset_file.write("COUNT:" + str(curr_doc_count)+ " " +text+'\n')
+                dataset_file.write(text+'\n')
                 curr_doc_count += 1
 
                 comments_list.append(text)
@@ -127,7 +140,7 @@ def grab_videos(keyword, token=None):
 
 
 
-dataset_file  = open("dataset.txt", "r+") 
+dataset_file  = open("dataset.txt", "w") 
 
 # ---------------------------------------------------------------------------------------------
 # To search a video
