@@ -74,15 +74,18 @@ def stem_words(words):
         word_set["stemmed"].append(stem)
     # return stems
 
-def lemmatize_verbs(words):
+def lemmatize_verbs(words,text):
     """Lemmatize verbs in list of tokenized words"""
     lemmatizer = WordNetLemmatizer()
     lemmas = []
     for word in words:
         lemma = lemmatizer.lemmatize(word, pos='v')
+        # print(word,lemma)
+        text = text.replace(word,lemma)
         word_set["lemmatized"].append(lemma)
         lemmas.append(lemma)
-    return lemmas
+    # print(text)
+    return lemmas,text
 
     
 def remove_emoji(text):
@@ -98,10 +101,10 @@ def preproccessing(text):
 
     # ----------------------------------------------------------------
     # Lemmatizing and tracking of word in documents
-    temp = lemmatize_verbs(remove_stopwords(temp))
+    temp,text = lemmatize_verbs(remove_stopwords(temp), text)
     for word in temp:
-        # if word in dictionary: 
-        #     if curr_doc_count in dictionary[word]: continue
+        if word in dictionary: 
+            if curr_doc_count in dictionary[word]: continue
         dictionary.setdefault(word, []).append(curr_doc_count)
     # ----------------------------------------------------------------
     return text

@@ -1,5 +1,6 @@
 import numpy
 import ast
+import re
 
 
 # ---------------------------------------------------------------------
@@ -9,7 +10,7 @@ file = open("dataset.txt", "r")
 for line in file:
 	line = line.strip('\n')
 	dataset.append(line)
-# print(dataset)	
+print(dataset)	
 # ---------------------------------------------------------------------
 
 # ---------------------------------------------------------------------
@@ -26,6 +27,10 @@ def removekey(d, key):
     r = dict(d)
     del r[key]
     return r
+
+
+def count_occurrences(word, sentence):
+    return sentence.lower().split().count(word)
 # ---------------------------------------------------------------------
 
 
@@ -37,7 +42,7 @@ dictionary = reading()
 for key in dictionary:
 	if len(dictionary[key]) < 2:
 		dictionary = removekey(dictionary,key)
-print(dictionary)
+# print(dictionary)
 
 
 # Creates the bag of words
@@ -48,8 +53,32 @@ for key in dictionary:
 	for val in dictionary[key]:
 		bag_of_words[counter][val] += 1
 	counter += 1
-print(bag_of_words[0])
 
+# values = list(dictionary.values())
+# print({val:values[key] for key,val in enumerate(key)})
+
+
+
+
+
+
+
+# # -------------------------------------------------------------------
+normalized_matrix = numpy.zeros(shape=(no_of_dictionary,no_of_docs))
+# # TF-IDF Computation
+# for i in range(no_of_dictionary):
+for i, key in enumerate(dictionary):
+	print(i, key)
+	for val in dictionary[key]:
+		print(val,count_occurrences(key,dataset[val]))
+		# break
+	# break
+		# normalized_matrix[i][val] = 
+# 	for j in range(no_of_docs):
+
+
+
+# # -------------------------------------------------------------------
 
 
 
