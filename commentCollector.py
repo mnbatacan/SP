@@ -54,7 +54,7 @@ def replace_contractions(text):
     """Replace contractions in string of text"""
     return contractions.fix(text)
 
-def remove_stopwords(words):
+def remove_stopwords(words,text):
     """Remove stop words from list of tokenized words"""
     new_words = []
     for word in words:
@@ -62,7 +62,8 @@ def remove_stopwords(words):
             w = tb.Word(word)
             word_set["words"].append(w.correct())
             new_words.append(w.correct())
-    return new_words
+    text = ' '.join(new_words)
+    return new_words,text
 
 def stem_words(words):
     """Stem words in list of tokenized words"""
@@ -80,11 +81,11 @@ def lemmatize_verbs(words,text):
     lemmas = []
     for word in words:
         lemma = lemmatizer.lemmatize(word, pos='v')
-        # print(word,lemma)
+        print(word,lemma)
         text = text.replace(word,lemma)
         word_set["lemmatized"].append(lemma)
         lemmas.append(lemma)
-    # print(text)
+    print(text)
     return lemmas,text
 
     
@@ -101,7 +102,8 @@ def preproccessing(text):
 
     # ----------------------------------------------------------------
     # Lemmatizing and tracking of word in documents
-    temp,text = lemmatize_verbs(remove_stopwords(temp), text)
+    stopwords_removed, text = remove_stopwords(temp,text)
+    temp,text = lemmatize_verbs(stopwords_removed, text)
     for word in temp:
         if word in dictionary: 
             if curr_doc_count in dictionary[word]: continue

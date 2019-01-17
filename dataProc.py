@@ -72,8 +72,8 @@ for i, key in enumerate(dictionary):
 	print(i, key)
 	for val in dictionary[key]:
 		print(val,count_occurrences(key,dataset[val]),len(dataset[val].split()))
-		normalized_matrix[i][val] = (count_occurrences(key,dataset[val])/len(dataset[val].split())) * (no_of_docs/len(dictionary[key])) 
-print(normalized_matrix)
+		normalized_matrix[i][val] = (count_occurrences(key,dataset[val])/len(dataset[val].split())) * math.log(no_of_docs/len(dictionary[key])) 
+print(normalized_matrix[1])
 
 
 # # -------------------------------------------------------------------
