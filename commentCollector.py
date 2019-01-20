@@ -105,8 +105,8 @@ def preproccessing(text):
     stopwords_removed, text = remove_stopwords(temp,text)
     temp,text = lemmatize_verbs(stopwords_removed, text)
     for word in temp:
-        if word in dictionary: 
-            if curr_doc_count in dictionary[word]: continue
+        # if word in dictionary: 
+        #     if curr_doc_count in dictionary[word]: continue
         dictionary.setdefault(word, []).append(curr_doc_count)
     # ----------------------------------------------------------------
     return text
@@ -151,18 +151,32 @@ def grab_videos(keyword, token=None):
     return 0
 
 
+def csv_collector():
+    global dataset_file, curr_doc_count
+    titles = ["Neatest Guide Stock Market Investing","Investing Dummies","Book Common Sense Investing Only Way Guarantee Your Fair Share Stock Market Returns","Book Value Investing","Value Investing Graham Buffett Beyond","Rich Dad Guide Investing What Rich, That Poor Middle Class Do Not!","Investing Real Estate","Stock Investing Dummies","Rich Dad Advisors: ABC Real Estate Investing: Secrets Finding Hidden Profits Most Investors Miss"]
+    for text in titles:
+        text = preproccessing(text)
+
+        print("COUNT:" + str(curr_doc_count)+ " " + text)
+        dataset_file.write(text+'\n')
+        curr_doc_count += 1
+        comments_list.append(text)
+
 
 dataset_file  = open("dataset.txt", "w") 
 
 # ---------------------------------------------------------------------------------------------
 # To search a video
-token = grab_videos("elections")
+# token = grab_videos("elections")
 # token = grab_videos("logan paul")
 # token = grab_videos("youtube rewind")
 
 
 # Stemm and lemmatize the words collected
 
+
+
+csv_collector()
 
 # ---------------------------------------------------------------------------------------------
 
