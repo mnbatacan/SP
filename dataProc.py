@@ -5,7 +5,9 @@ import math
 
 from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.feature_extraction.text import TfidfTransformer
-from sklearn.naive_bayes import MultinomialNB
+from sklearn.svm import LinearSVC
+from sklearn.decomposition import TruncatedSVD
+from sklearn.utils.extmath import randomized_svd
 
 
 # ---------------------------------------------------------------------
@@ -103,14 +105,54 @@ normalized_matrix = tfidf_transformer.fit_transform(feature_vectors)
 print(normalized_matrix.shape)
 
 
-print(len(dataset_class))
+# SVD
+svd = TruncatedSVD(n_components=100, n_iter=7)
+svd_matrix = svd.fit_transform(normalized_matrix)
 
-# # Classifier
-clf = MultinomialNB().fit(normalized_matrix, dataset_class)
-docs_new = ['shut the fuck up ugly ass bitch nigga i stole your setup', ' you are a nigger maggot']
+# LinearSVC
+clf = LinearSVC()
+clf.fit(svd_matrix,dataset_class)
+
+
+# SVD
+# U_svd, S_svd, VT_svd = randomized_svd(normalized_matrix,n_components=100, n_iter=7,random_state=None)
+# # svd.fit(normalized_matrix)X, 
+
+
+
+# print(len(dataset_class))
+# # print(svd_matrix)	
+# explained_variance = svd.explained_variance_ratio_.sum()
+# print(svd.explained_variance_ratio_)
+
+# print(svd.singular_values_) 
+# print(S_svd)
+
+
+target_vector = [0,1,2]
+ 
+# # Classifier 
+# clf = MultinomialNB().fit(svd_matrix, dataset_class)
+
+
+# print(svd_matrix.shape)
+# print(clf.coef_)
+
+
+numpy.seterr(divide='ignore', invalid='ignore')
+
+
+docs_new = ["i hate you fat ass bitch "]
 X_new_counts = count_vect.transform(docs_new)
 X_new_tfidf = tfidf_transformer.transform(X_new_counts)
-predicted = clf.predict(X_new_tfidf)
+X_new_svd = svd.transform(X_new_tfidf)
+
+print(X_new_svd.shape)
+predicted = clf.predict(X_new_svd)
+
+
+
+# X_test=tvect.transform(test)
 
 # for doc, category in zip(docs_new, predicted): print('%r => %s' % (doc, category)
 print(predicted)
