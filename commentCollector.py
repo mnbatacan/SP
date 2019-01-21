@@ -88,7 +88,7 @@ def lemmatize_verbs(words,text):
         text = text.replace(word,lemma)
         word_set["lemmatized"].append(lemma)
         lemmas.append(lemma)
-    print(text)
+    # print(text)
     return lemmas,text
 
     
@@ -160,27 +160,22 @@ def grab_videos(keyword, token=None):
 
 
 def csv_collector():
-    global dataset_file, curr_doc_count
+    global dataset_file, curr_doc_count,dataset_class
     with open('dataset/final_dataset.csv') as csv_file:
         csv_reader = csv.reader(csv_file, delimiter=',')
         line_count = 0
         for row in csv_reader:
-            if line_count == 0:
-                print(f'Column names are {", ".join(row)}')
-                line_count += 1
-            elif line_count == 10:
-                break
-            else:
+            # if line_count == 10:
+            #     break
+            # else:
                 # print(f'\t{row[0]} : {row[2]}.')
-                text = preproccessing(row[2])
-                dataset_file.write(text+'\n')
-                curr_doc_count += 1
-                comments_list.append(text)
+            text = preproccessing(row[2])
+            dataset_file.write(text+'\n')
+            curr_doc_count += 1
+            comments_list.append(text)
 
-                dataset_class.append(row[0])
-                
-
-                line_count += 1
+            dataset_class.append(row[0])
+            line_count += 1
 
     print(f'Processed {line_count} lines.')
     
@@ -214,6 +209,10 @@ dataset_file.write(str(len(dictionary))+'\n')
 
 with open('dictionary.txt', 'w') as dictionary_file:
     dictionary_file.write(json.dumps(dictionary))
+
+with open('dataset_class.txt', 'w') as dataset_class_file:
+    dataset_class_file.write(json.dumps(dataset_class))
+
 
 
 
