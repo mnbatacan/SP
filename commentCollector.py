@@ -7,6 +7,8 @@ import json
 import emoji
 import time
 import multiprocessing
+import csv
+import preprocessor as p
 
 
 
@@ -39,6 +41,7 @@ curr_doc_count = 0
 
 word_set = {'words': [], 'stemmed':[], 'lemmatized':[]}
 dictionary = dict()
+dataset_class = []
 
 def strip_html(text):
     # soup = BeautifulSoup(text, "html.parser")
@@ -81,7 +84,7 @@ def lemmatize_verbs(words,text):
     lemmas = []
     for word in words:
         lemma = lemmatizer.lemmatize(word, pos='v')
-        print(word,lemma)
+        # print(word,lemma)
         text = text.replace(word,lemma)
         word_set["lemmatized"].append(lemma)
         lemmas.append(lemma)
@@ -92,9 +95,14 @@ def lemmatize_verbs(words,text):
 def remove_emoji(text):
     return emoji.get_emoji_regexp().sub(u'', text)
 
+def remove_usernames(text):
+    return re.sub('@[^\s]+','',text)
+
 def preproccessing(text):
     global curr_doc_count, dictionary
     text = strip_html(remove_emoji(text))
+    text = remove_usernames(text)
+    text = p.clean(text)
     # print("hey: " + text)
     text =  replace_contractions(preprocess_text(text))
     temp = nltk.word_tokenize(text)
@@ -153,14 +161,29 @@ def grab_videos(keyword, token=None):
 
 def csv_collector():
     global dataset_file, curr_doc_count
-    titles = ["Neatest Guide Stock Market Investing","Investing Dummies","Book Common Sense Investing Only Way Guarantee Your Fair Share Stock Market Returns","Book Value Investing","Value Investing Graham Buffett Beyond","Rich Dad Guide Investing What Rich, That Poor Middle Class Do Not!","Investing Real Estate","Stock Investing Dummies","Rich Dad Advisors: ABC Real Estate Investing: Secrets Finding Hidden Profits Most Investors Miss"]
-    for text in titles:
-        text = preproccessing(text)
+    with open('dataset/final_dataset.csv') as csv_file:
+        csv_reader = csv.reader(csv_file, delimiter=',')
+        line_count = 0
+        for row in csv_reader:
+            if line_count == 0:
+                print(f'Column names are {", ".join(row)}')
+                line_count += 1
+            elif line_count == 10:
+                break
+            else:
+                # print(f'\t{row[0]} : {row[2]}.')
+                text = preproccessing(row[2])
+                dataset_file.write(text+'\n')
+                curr_doc_count += 1
+                comments_list.append(text)
 
-        print("COUNT:" + str(curr_doc_count)+ " " + text)
-        dataset_file.write(text+'\n')
-        curr_doc_count += 1
-        comments_list.append(text)
+                dataset_class.append(row[0])
+                
+
+                line_count += 1
+
+    print(f'Processed {line_count} lines.')
+    
 
 
 dataset_file  = open("dataset.txt", "w") 
