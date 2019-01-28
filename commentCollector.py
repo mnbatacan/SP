@@ -44,10 +44,10 @@ dictionary = dict()
 dataset_class = []
 
 def strip_html(text):
-    # soup = BeautifulSoup(text, "html.parser")
-    # line = soup.get_text()
-    # line = line.split()
-    return ' '.join(text.split())
+    soup = BeautifulSoup(text, "html.parser")
+    line = soup.get_text()
+    line = line.split()
+    return ' '.join(line)
 
 def preprocess_text(text):
     translator = str.maketrans('', '', string.punctuation)
@@ -100,11 +100,13 @@ def remove_usernames(text):
 
 def preproccessing(text):
     global curr_doc_count, dictionary
-    text = strip_html(remove_emoji(text))
+    text = strip_html(text)
+    text = remove_emoji(text)
     text = remove_usernames(text)
     text = p.clean(text)
     # print("hey: " + text)
     text =  replace_contractions(preprocess_text(text))
+    # text = preprocess_text(text)
     temp = nltk.word_tokenize(text)
     # stem_words(word_set['dictionary'])
 
@@ -161,7 +163,7 @@ def grab_videos(keyword, token=None):
 
 def csv_collector():
     global dataset_file, curr_doc_count,dataset_class
-    with open('dataset/final_dataset.csv') as csv_file:
+    with open('dataset/twitter_classified.csv') as csv_file:
         csv_reader = csv.reader(csv_file, delimiter=',')
         line_count = 0
         for row in csv_reader:
@@ -169,15 +171,39 @@ def csv_collector():
             #     break
             # else:
                 # print(f'\t{row[0]} : {row[2]}.')
-            text = preproccessing(row[2])
+            text = preproccessing(row[1])
             dataset_file.write(text+'\n')
             curr_doc_count += 1
             comments_list.append(text)
 
-            dataset_class.append(row[0])
+            # dataset_class.append(row[0])
+            if(row[0] == "The tweet contains hate speech"): dataset_class.append(0)
+            elif(row[0] == "The tweet uses offensive language but not hate speech"): dataset_class.append(1)
+            else: dataset_class.append(0)
             line_count += 1
+            print(line_count)
+
+    with open('dataset/labeled_data.csv') as csv_file2:
+        csv_reader2 = csv.reader(csv_file2, delimiter=',')
+        # line_count = 0
+        for row in csv_reader2:
+            if line_count == 25000:
+                break
+            # else:
+                # print(f'\t{row[0]} : {row[2]}.')
+            text = preproccessing(row[1])
+            dataset_file.write(text+'\n')
+            curr_doc_count += 1
+            comments_list.append(text)
+
+            dataset_class.append(int(row[0]))
+            line_count += 1
+            print(line_count)
 
     print(f'Processed {line_count} lines.')
+
+
+
     
 
 
