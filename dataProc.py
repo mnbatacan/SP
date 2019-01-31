@@ -17,7 +17,9 @@ file = open("dataset.txt", "r")
 for line in file:
 	line = line.strip('\n')
 	dataset.append(line)
-# print(dataset)	
+# print(dataset)
+
+print("dataset loaded")	
 # ---------------------------------------------------------------------
 
 # ---------------------------------------------------------------------
@@ -69,91 +71,82 @@ for key in dictionary:
 		bag_of_words[counter][val] += 1
 	counter += 1
 
-# values = list(dictionary.values())
-# print({val:values[key] for key,val in enumerate(key)})
+print("bag of words craeted")
 
 
+# ---------------------------------------------------------------------
+# Count dataset
+class_number = []
+class_number.append(dataset_class.count(0))
+class_number.append(dataset_class.count(1))
+class_number.append(dataset_class.count(2))
+
+
+print(class_number)
+
+
+
+X_train, X_test, y_train, y_test = train_test_split(df, y, test_size=0.2)
+print X_train.shape, y_train.shape
+print X_test.shape, y_test.shape
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+# from sklearn.feature_extraction.text import CountVectorizer
 # count_vect = CountVectorizer()
-# X_train_counts = count_vect.fit_transform(twenty_train.data)
-# X_train_counts.shape
+# feature_vectors = count_vect.fit_transform(dataset)
+# # print(feature_vectors.shape)
 
 
-
-# # # -------------------------------------------------------------------
-# normalized_matrix = numpy.zeros(shape=(no_of_dictionary,no_of_docs))
-# # # TF-IDF Computation
-# # for i in range(no_of_dictionary):
-# for i, key in enumerate(dictionary):
-# 	print(i, key)
-# 	for val in dictionary[key]:
-# 		print(val,count_occurrences(key,dataset[val]),len(dataset[val].split()))
-# 		normalized_matrix[i][val] = (count_occurrences(key,dataset[val])/len(dataset[val].split())) * math.log(no_of_docs/len(dictionary[key])) 
-# print(normalized_matrix[1])
-
-
-# # # -------------------------------------------------------------------
-from sklearn.feature_extraction.text import CountVectorizer
-count_vect = CountVectorizer()
-feature_vectors = count_vect.fit_transform(dataset)
-print(feature_vectors.shape)
 
 
 # --------------------------------------------------------------------------
-# TF-IDF
-tfidf_transformer = TfidfTransformer()
-normalized_matrix = tfidf_transformer.fit_transform(feature_vectors)
-print(normalized_matrix.shape)
+# # TF-IDF
+# tfidf_transformer = TfidfTransformer()
+# normalized_matrix = tfidf_transformer.fit_transform(feature_vectors)
+# # print(normalized_matrix.	shape)
+# print("tfidf done")
 
 
-# SVD
-svd = TruncatedSVD(n_components=100, n_iter=7)
-svd_matrix = svd.fit_transform(normalized_matrix)
-
-# LinearSVC
-clf = LinearSVC()
-clf.fit(svd_matrix,dataset_class)
+# # SVD
+# svd = TruncatedSVD(n_components=100, n_iter=7)
+# svd_matrix = svd.fit_transform(normalized_matrix)
+# print("SVD done")
 
 
-# SVD
-# U_svd, S_svd, VT_svd = randomized_svd(normalized_matrix,n_components=100, n_iter=7,random_state=None)
-# # svd.fit(normalized_matrix)X, 
+# # LinearSVC
+# clf = LinearSVC()
+# clf.fit(svd_matrix,dataset_class)
+# print("Classifier done")
 
 
+# numpy.seterr(divide='ignore', invalid='ignore')
 
-# print(len(dataset_class))
-# # print(svd_matrix)	
-# explained_variance = svd.explained_variance_ratio_.sum()
-# print(svd.explained_variance_ratio_)
+# print("starting classifying")
+# docs_new = ["you are the man!!", "you are a nigga", "you are faggot", "trump is an asshole", "you are really an ass but i like you", "stupid cunts","so uncivillized"]
+# X_new_counts = count_vect.transform(docs_new)
+# X_new_tfidf = tfidf_transformer.transform(X_new_counts)
+# X_new_svd = svd.transform(X_new_tfidf)
 
-# print(svd.singular_values_) 
-# print(S_svd)
-
-
-target_vector = [0,1,2]
- 
-# # Classifier 
-# clf = MultinomialNB().fit(svd_matrix, dataset_class)
-
-
-# print(svd_matrix.shape)
-# print(clf.coef_)
-
-
-numpy.seterr(divide='ignore', invalid='ignore')
-
-
-docs_new = ["i hate you fat ass bitch "]
-X_new_counts = count_vect.transform(docs_new)
-X_new_tfidf = tfidf_transformer.transform(X_new_counts)
-X_new_svd = svd.transform(X_new_tfidf)
-
-print(X_new_svd.shape)
-predicted = clf.predict(X_new_svd)
+# # print(X_new_svd.shape)
+# print("predicting...")
+# predicted = clf.predict(X_new_svd)
 
 
 
-# X_test=tvect.transform(test)
+# # X_test=tvect.transform(test)
 
-# for doc, category in zip(docs_new, predicted): print('%r => %s' % (doc, category)
-print(predicted)
+# # for doc, category in zip(docs_new, predicted): print('%r => %s' % (doc, category)
+# print(predicted)
 

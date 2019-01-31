@@ -179,7 +179,7 @@ def csv_collector():
             # dataset_class.append(row[0])
             if(row[0] == "The tweet contains hate speech"): dataset_class.append(0)
             elif(row[0] == "The tweet uses offensive language but not hate speech"): dataset_class.append(1)
-            else: dataset_class.append(0)
+            else: dataset_class.append(2)
             line_count += 1
             print(line_count)
 
