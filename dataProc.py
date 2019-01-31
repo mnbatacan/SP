@@ -2,30 +2,32 @@ import numpy
 import ast
 import re
 import math
+import pandas as pd
 
 from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.feature_extraction.text import TfidfTransformer
 from sklearn.svm import LinearSVC
 from sklearn.decomposition import TruncatedSVD
 from sklearn.utils.extmath import randomized_svd
+from sklearn.model_selection import train_test_split
 
 
-# ---------------------------------------------------------------------
-# Read dataset text file
-dataset = []
-file = open("dataset.txt", "r") 
-for line in file:
-	line = line.strip('\n')
-	dataset.append(line)
-# print(dataset)
+# # ---------------------------------------------------------------------
+# # Read dataset text file
+# dataset = []
+# file = open("dataset.txt", "r") 
+# for line in file:
+# 	line = line.strip('\n')
+# 	dataset.append(line)
+# # print(dataset)
 
-print("dataset loaded")	
-# ---------------------------------------------------------------------
+# print("dataset loaded")	
+# # ---------------------------------------------------------------------
 
-# ---------------------------------------------------------------------
-# Read dataset text file
-dictionary = []
-dataset_class = []
+# # ---------------------------------------------------------------------
+# # Read dataset text file
+# dictionary = []
+# dataset_class = []
 
 def reading():
     with open('dictionary.txt', 'r') as f:
@@ -49,46 +51,54 @@ def count_occurrences(word, sentence):
 # ---------------------------------------------------------------------
 
 
-no_of_docs = int(dataset.pop(len(dataset)-2))
-no_of_dictionary = int(dataset.pop(len(dataset)-1))
-dictionary = reading()
-dataset_class = read_dataset_class()
+# no_of_docs = int(dataset.pop(len(dataset)-2))
+# no_of_dictionary = int(dataset.pop(len(dataset)-1))
+# dictionary = reading()
+# dataset_class = read_dataset_class()
 
 
-# Remove dictionary items with less than 2 ocurrence on all document
-for key in dictionary:
-	if len(dictionary[key]) < 2:
-		dictionary = removekey(dictionary,key)
-# print(dictionary)
+# # Remove dictionary items with less than 2 ocurrence on all document
+# for key in dictionary:
+# 	if len(dictionary[key]) < 2:
+# 		dictionary = removekey(dictionary,key)
+# # print(dictionary)
 
 
-# Creates the bag of words
-bag_of_words = numpy.zeros(shape=(no_of_dictionary,no_of_docs))
+# # Creates the bag of words
+# bag_of_words = numpy.zeros(shape=(no_of_dictionary,no_of_docs))
 
-counter = 0
-for key in dictionary:
-	for val in dictionary[key]:
-		bag_of_words[counter][val] += 1
-	counter += 1
+# counter = 0
+# for key in dictionary:
+# 	for val in dictionary[key]:
+# 		bag_of_words[counter][val] += 1
+# 	counter += 1
 
-print("bag of words craeted")
-
-
-# ---------------------------------------------------------------------
-# Count dataset
-class_number = []
-class_number.append(dataset_class.count(0))
-class_number.append(dataset_class.count(1))
-class_number.append(dataset_class.count(2))
+# print("bag of words craeted")
 
 
-print(class_number)
+# # # ---------------------------------------------------------------------
+# # # Count dataset
+# class_number = []
+# class_number.append(dataset_class.count(0))
+# class_number.append(dataset_class.count(1))
+# class_number.append(dataset_class.count(2))
+
+
+# print(class_number)
 
 target_class = [0,1,2]
 
-X_train, X_test, y_train, y_test = train_test_split(dataset, target, test_size=0.2)
-print X_train.shape, y_train.shape
-print X_test.shape, y_test.shape
+# def csv_to_pandas():
+df = pd.read_csv("dataset/main_dataset.csv")
+# df = df.sort(['class'])
+# print(df.head(10))
+print(df.groupby('class').size())
+# print(df['class'][:10])
+target = df['class']
+
+# X_train, X_test, y_train, y_test= train_test_split(df, target, test_size=0.2)
+# print(X_train.shape, y_train.shape)
+# print( X_test.shape, y_test.shape)
 
 
 

@@ -239,8 +239,9 @@ def write_complete_dataset():
     
 
 def csv_to_pandas():
-    df = pd.read_csv("dataset/labeled_data.csv")
-    print(df.head(10))
+    df = pd.read_csv("dataset/main_dataset.csv")
+    # print(df.head(10))
+    print(df['class'][:10])
 
 
 
@@ -258,8 +259,8 @@ def csv_to_pandas():
 
 
 # csv_collector()
-# csv_to_pandas()
-write_complete_dataset()
+csv_to_pandas()
+# write_complete_dataset()
 
 # ---------------------------------------------------------------------------------------------
 
