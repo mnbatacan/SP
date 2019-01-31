@@ -84,9 +84,9 @@ class_number.append(dataset_class.count(2))
 
 print(class_number)
 
+target_class = [0,1,2]
 
-
-X_train, X_test, y_train, y_test = train_test_split(df, y, test_size=0.2)
+X_train, X_test, y_train, y_test = train_test_split(dataset, target, test_size=0.2)
 print X_train.shape, y_train.shape
 print X_test.shape, y_test.shape
 

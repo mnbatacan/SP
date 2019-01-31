@@ -9,6 +9,8 @@ import time
 import multiprocessing
 import csv
 import preprocessor as p
+import pandas as pd
+import ast
 
 
 
@@ -202,12 +204,47 @@ def csv_collector():
 
     print(f'Processed {line_count} lines.')
 
+def read_dataset_class():
+    with open('dataset_class.txt', 'r') as f:
+        dataset_class = ast.literal_eval(f.read())
+    return dataset_class
+
+def write_complete_dataset():
+    global dataset_class
+    main_dataset_list = []
+    file = open("dataset.txt", "r") 
+    for line in file:
+        line = line.strip('\n')
+        main_dataset_list.append(line)
+    print(main_dataset_list[:10])
+
+    
+    dataset_class = read_dataset_class()
+    print(len(dataset_class))
+
+    print("dataset loaded")
+
+    with open('dataset/main_dataset.csv', mode='w') as main_dataset:
+        writer = csv.writer(main_dataset, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
+
+        writer.writerow(['class', 'text'])
+
+        for index, val in enumerate(main_dataset_list):
+            writer.writerow([dataset_class[index],val])
+            # print(dataset_class[index],val)
+            print(index)
+            if index == 24999: break
 
 
     
 
+def csv_to_pandas():
+    df = pd.read_csv("dataset/labeled_data.csv")
+    print(df.head(10))
 
-dataset_file  = open("dataset.txt", "w") 
+
+
+# dataset_file  = open("dataset.txt", "w") 
 
 # ---------------------------------------------------------------------------------------------
 # To search a video
@@ -220,7 +257,9 @@ dataset_file  = open("dataset.txt", "w")
 
 
 
-csv_collector()
+# csv_collector()
+# csv_to_pandas()
+write_complete_dataset()
 
 # ---------------------------------------------------------------------------------------------
 
@@ -228,16 +267,16 @@ csv_collector()
 
 
 
-print("\n\nTotal number of comments: " + str(len(comments_list)))
-dataset_file.write(str(len(comments_list))+'\n')
-dataset_file.write(str(len(dictionary))+'\n')
+# print("\n\nTotal number of comments: " + str(len(comments_list)))
+# dataset_file.write(str(len(comments_list))+'\n')
+# dataset_file.write(str(len(dictionary))+'\n')
 
 
-with open('dictionary.txt', 'w') as dictionary_file:
-    dictionary_file.write(json.dumps(dictionary))
+# with open('dictionary.txt', 'w') as dictionary_file:
+#     dictionary_file.write(json.dumps(dictionary))
 
-with open('dataset_class.txt', 'w') as dataset_class_file:
-    dataset_class_file.write(json.dumps(dataset_class))
+# with open('dataset_class.txt', 'w') as dataset_class_file:
+#     dataset_class_file.write(json.dumps(dataset_class))
 
 
 
