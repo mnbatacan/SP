@@ -109,17 +109,17 @@ def preproccessing(text):
     # print("hey: " + text)
     text =  replace_contractions(preprocess_text(text))
     # text = preprocess_text(text)
-    temp = nltk.word_tokenize(text)
+    # temp = nltk.word_tokenize(text)
     # stem_words(word_set['dictionary'])
 
     # ----------------------------------------------------------------
     # Lemmatizing and tracking of word in documents
-    stopwords_removed, text = remove_stopwords(temp,text)
-    temp,text = lemmatize_verbs(stopwords_removed, text)
-    for word in temp:
+    # stopwords_removed, text = remove_stopwords(temp,text)
+    # temp,text = lemmatize_verbs(stopwords_removed, text)
+    # for word in temp:
         # if word in dictionary: 
         #     if curr_doc_count in dictionary[word]: continue
-        dictionary.setdefault(word, []).append(curr_doc_count)
+        # dictionary.setdefault(word, []).append(curr_doc_count)
     # ----------------------------------------------------------------
     return text
 
@@ -188,17 +188,27 @@ def csv_collector():
     with open('dataset/labeled_data.csv') as csv_file2:
         csv_reader2 = csv.reader(csv_file2, delimiter=',')
         # line_count = 0
+        flag = 0
         for row in csv_reader2:
-            if line_count == 25000:
+            if flag == 0: 
+                flag = 1
+                continue
+
+            if line_count == 25001:
                 break
+
+            # if line_count == 20:
+            #     break
             # else:
                 # print(f'\t{row[0]} : {row[2]}.')
+            temp_class = int(row[0])
+            if(line_count >= 22000 and line_count <=25000 and temp_class != 0): continue
             text = preproccessing(row[1])
             dataset_file.write(text+'\n')
             curr_doc_count += 1
             comments_list.append(text)
 
-            dataset_class.append(int(row[0]))
+            dataset_class.append(temp_class)
             line_count += 1
             print(line_count)
 
@@ -233,7 +243,7 @@ def write_complete_dataset():
             writer.writerow([dataset_class[index],val])
             # print(dataset_class[index],val)
             print(index)
-            if index == 24999: break
+            # if index == 24999: break
 
 
     
@@ -256,8 +266,11 @@ def write_complete_dataset():
 
 
 # csv_collector()
-csv_to_pandas()
-# write_complete_dataset()
+# with open('dataset_class.txt', 'w') as dataset_class_file:
+#     dataset_class_file.write(json.dumps(dataset_class))
+
+write_complete_dataset()
+# csv_to_pandas()
 
 # ---------------------------------------------------------------------------------------------
 
@@ -273,8 +286,6 @@ csv_to_pandas()
 # with open('dictionary.txt', 'w') as dictionary_file:
 #     dictionary_file.write(json.dumps(dictionary))
 
-# with open('dataset_class.txt', 'w') as dataset_class_file:
-#     dataset_class_file.write(json.dumps(dataset_class))
 
 
 
