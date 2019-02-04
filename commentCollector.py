@@ -238,10 +238,7 @@ def write_complete_dataset():
 
     
 
-def csv_to_pandas():
-    df = pd.read_csv("dataset/main_dataset.csv")
-    # print(df.head(10))
-    print(df['class'][:10])
+
 
 
 
