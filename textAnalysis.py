@@ -33,7 +33,7 @@ total_support = []
 accuracy_sum = 0
 accuracy_average = 0
 # Read csv file then save to pandas dataframe
-df = pd.read_csv("dataset/main_dataset.csv")
+df = pd.read_csv("dataset/main_dataset_lemma.csv")
 df = shuffle(df)
 target = df['class']
 
@@ -61,8 +61,8 @@ for train, test in kfold.split(df):
 	print("TRAIN CLASS LENGTH: ",len(train_class))
 
 	# N-GRAMS
-	# count_vect = CountVectorizer()
-	count_vect = CountVectorizer(ngram_range=(2,2))
+	count_vect = CountVectorizer()
+	# count_vect = CountVectorizer(ngram_range=(3,3),strip_accents = 'unicode', stop_words = 'english')
 
 	feature_vectors = count_vect.fit_transform(train_text)
 	print(feature_vectors.shape)
@@ -115,6 +115,6 @@ for train, test in kfold.split(df):
 
 	print('--------------------------------------------------')
 
-	# break
+	break
 
 
