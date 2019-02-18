@@ -115,6 +115,6 @@ for train, test in kfold.split(df):
 
 	print('--------------------------------------------------')
 
-	break
+	# break
 
 
