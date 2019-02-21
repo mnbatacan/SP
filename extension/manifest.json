@@ -1,0 +1,22 @@
+{
+ "manifest_version": 2,
+ "name": "Ytest_exten",
+ "description": "Automatic Yt comments moderator",
+ "version": "1",
+ "author": "meme",
+"browser_action": {
+   "default_icon": "icon.png",
+   "default_title": "Have a good day",
+   "default_popup": "index.html"
+ },
+
+"content_scripts": [
+    {
+      "matches": ["https://www.youtube.com/watch?v=*"],
+      "css": ["inject.css"],
+      "js": ["jquery.js","inject.js"],
+      "run_at": "document_end"
+    }
+ ],
+"content_security_policy": "script-src 'self' https://ajax.googleapis.com https://cdnjs.cloudflare.com https://code.jquery.com; object-src 'self'"
+}
