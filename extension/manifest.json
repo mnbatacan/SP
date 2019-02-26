@@ -4,11 +4,26 @@
  "description": "Automatic Yt comments moderator",
  "version": "1",
  "author": "meme",
+ "key":"MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAlpJsJCu4OMofK4KsQO1h322lJXh5d5bizlEiWO/JNITxbwCPASeFHFfRnSn8hqNudF1kp4tjYRUnpB6q9cXNFgX4dK7Cg3Wi5J5bHepQyhPzRpmXUSNatigfrbflPUvOezTboIbc46RgvnWC7ijD9bOmUrA7WgJNKm1Z2zp6xJzerNhPMaULjYxpVVff2UL4cJUlnzyEzsUXmOYMmclqV8VEVA+1guswNjh0R3o1vYPmkLifDUu8ov3FiNBSLRg3R70/AzlzCjUvYNhJQ+QFzps9wxtUTHDB/zJuXVFC+XugBm/tLT+8aTq9+PxS+RRsMHVn2VYhSddw7BCoN++NxQIDAQAB",
 "browser_action": {
    "default_icon": "icon.png",
    "default_title": "Have a good day",
    "default_popup": "index.html"
  },
+     "background": {
+      "scripts": [
+        "background.js"
+      ],
+      "persistent": false
+    },
+"oauth2": {
+    "client_id": "440105667802-rblttlfp7gbvu1e5t5ip09mkkkp9v38d.apps.googleusercontent.com",
+    "scopes":[""]
+  },
+
+  "permissions": [
+      "identity"
+    ],
 
 "content_scripts": [
     {
@@ -18,5 +33,5 @@
       "run_at": "document_end"
     }
  ],
-"content_security_policy": "script-src 'self' https://ajax.googleapis.com https://cdnjs.cloudflare.com https://code.jquery.com; object-src 'self'"
+"content_security_policy": "script-src 'self' https://ajax.googleapis.com https://cdnjs.cloudflare.com https://code.jquery.com https://apis.google.com/js/api.js object-src 'self'"
 }
