@@ -25,15 +25,15 @@
  var head = document.getElementsByTagName('head')[0];
  var script = document.createElement('script');
  script.type = 'text/javascript';
- script.src = "https://apis.google.com/js/api.js?onload=handleClientLoad";
+ script.src = "https://apis.google.com/js/api.js?onload=buttonFunction";
 script.async= true;
 script.defer= true;
 
- script.onreadystatechange = function () {
-  if (this.readyState === 'complete' || this.readyState === 'loaded') {
-    handleClientLoad();
-  }
-};
+//  script.onreadystatechange = function () {
+//   if (this.readyState === 'complete' || this.readyState === 'loaded') {
+//     handleClientLoad();
+//   }
+// };
 
 window.onload = function() {
  // alert("let's go!");
@@ -60,7 +60,7 @@ const DISCOVERY_DOCS = ["https://www.googleapis.com/discovery/v1/apis/youtube/v3
 // separated them with spaces.
 const SCOPES = 'https://www.googleapis.com/auth/youtube.readonly';
 
-const authorizeButton = document.getElementById('authorize-button');
+authorizeButton = document.getElementById('authorize-button');
 const signoutButton = document.getElementById('signout-button');
 const content = document.getElementById('content');
 const channelForm = document.getElementById('channel-form');
@@ -101,10 +101,63 @@ function setToken(token){
   gapi.client.setToken({
         access_token: token
       });
+
+  https://www.googleapis.com/youtube/v3/channels?part=id&mine=true&key={YOUR_API_KEY}
+  // gapi.client.youtube.channels.list({
+  //         'part': 'id',
+  //         'mine': true
+  //       }).then(function(response) {
+  //         var channel = response.result.items[0];
+  //         console.log(channel);
+  //                 });
+
+              buildApiRequest('GET',
+                'https://www.googleapis.com/youtube/v3/channels',
+                {'mine': 'true',
+                 'part': 'id,snippet'});
 }
 
+  function removeEmptyParams(params) {
+    for (var p in params) {
+      if (!params[p] || params[p] == 'undefined') {
+        delete params[p];
+      }
+    }
+    return params;
+  }
+
+  function executeRequest(request) {
+    request.execute(function(response) {
+      console.log(response);
+    });
+  }
+
+  function buildApiRequest(requestMethod, path, params, properties) {
+    params = removeEmptyParams(params);
+    var request;
+    if (properties) {
+      var resource = createResource(properties);
+      request = gapi.client.request({
+          'body': resource,
+          'method': requestMethod,
+          'path': path,
+          'params': params
+      });
+    } else {
+      request = gapi.client.request({
+          'method': requestMethod,
+          'path': path,
+          'params': params
+      });
+    }
+    executeRequest(request);
+  }
+function buttonFunction(){
+  authorizeButton.onclick= handleClientLoad();
+}
 function handleClientLoad(){
   console.log("handleClientLoad: done");
+  
   gapi.load('client', {
     callback: function() {
       // Handle gapi.client initialization.
@@ -117,6 +170,7 @@ function handleClientLoad(){
 
       chrome.identity.onSignInChanged.addListener(function (account, signedIn) {
           console.log("HELLO:", account, signedIn);
+
       });
       
     },
