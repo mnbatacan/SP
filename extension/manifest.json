@@ -12,7 +12,7 @@
  },
      "background": {
       "scripts": [
-        "index.js"
+        "background.js"
       ],
       "persistent": false
     },
@@ -23,6 +23,7 @@
 
   "permissions": [
       "identity",
+      "activeTab",
       "*://apis.google.com/*"
     ],
 
@@ -30,9 +31,10 @@
     {
       "matches": ["https://www.youtube.com/watch?v=*"],
       "css": ["inject.css"],
-      "js": ["jquery.js","inject.js"],
-      "run_at": "document_end"
+      "js": ["jquery.js","inject.js","index.js","popup.js"],
+      "run_at": "document_end",
+      "all_frames":true
     }
  ],
-"content_security_policy": "script-src 'self' https://ajax.googleapis.com https://cdnjs.cloudflare.com https://code.jquery.com https://apis.google.com/js/api.js https://apis.google.com; object-src 'self'"
+"content_security_policy": "script-src 'self' 'unsafe-eval' https://ajax.googleapis.com https://cdnjs.cloudflare.com https://code.jquery.com https://apis.google.com/js/api.js https://apis.google.com; object-src 'self'"
 }
