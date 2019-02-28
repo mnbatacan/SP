@@ -12,17 +12,18 @@
  },
      "background": {
       "scripts": [
-        "background.js"
+        "index.js"
       ],
       "persistent": false
     },
 "oauth2": {
     "client_id": "440105667802-rblttlfp7gbvu1e5t5ip09mkkkp9v38d.apps.googleusercontent.com",
-    "scopes":[""]
+    "scopes":["https://www.googleapis.com/auth/youtube", "https://www.googleapis.com/auth/youtube.readonly"]
   },
 
   "permissions": [
-      "identity"
+      "identity",
+      "*://apis.google.com/*"
     ],
 
 "content_scripts": [
@@ -33,5 +34,5 @@
       "run_at": "document_end"
     }
  ],
-"content_security_policy": "script-src 'self' https://ajax.googleapis.com https://cdnjs.cloudflare.com https://code.jquery.com https://apis.google.com/js/api.js object-src 'self'"
+"content_security_policy": "script-src 'self' https://ajax.googleapis.com https://cdnjs.cloudflare.com https://code.jquery.com https://apis.google.com/js/api.js https://apis.google.com; object-src 'self'"
 }
