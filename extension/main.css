@@ -106,4 +106,4 @@ button{
 	margin: 5px;
 }
 
-#signout-button,#content{display: none}
+#authorize-button,#signout-button,#content{display: none}

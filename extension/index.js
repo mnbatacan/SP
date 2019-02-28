@@ -51,7 +51,7 @@ window.onload = function() {
 
 
  const defaultChannel = "pewdiepie"
-
+var authToken;
 const CLIENT_ID = '440105667802-rblttlfp7gbvu1e5t5ip09mkkkp9v38d.apps.googleusercontent.com'
 // Array of API discovery doc URLs for APIs used by the quickstart
 const DISCOVERY_DOCS = ["https://www.googleapis.com/discovery/v1/apis/youtube/v3/rest"];
@@ -78,27 +78,30 @@ const videoContainer = document.getElementById('video-container');
 // }
 
 
-function initClient() {
-	console.log("initClient: ---");
+// function initClient() {
+// 	console.log("initClient: ---");
 
-	gapi.client.init({
-	    discoveryDocs: DISCOVERY_DOCS,
-    	clientId: CLIENT_ID,
-      	scope: SCOPES
-    }).then(function () {
-    // Listen for sign-in state changes.
-    	console.log("initClient: then");
+// 	gapi.client.init({
+// 	    discoveryDocs: DISCOVERY_DOCS,
+//     	clientId: CLIENT_ID,
+//       	scope: SCOPES
+//     }).then(function () {
+//     // Listen for sign-in state changes.
+//     	console.log("initClient: then");
 	
-    	gapi.auth2.getAuthInstance().isSignedIn.listen(updateSigninStatus());
+//     	gapi.auth2.getAuthInstance().isSignedIn.listen(updateSigninStatus());
 
-        // Handle the initial sign-in state.
-        updateSigninStatus(gapi.auth2.getAuthInstance().isSignedIn.get());
-        authorizeButton.onclick = handleAuthClick;
-        signoutButton.onclick = handleSignoutClick;
-        });
-      }
-
-
+//         // Handle the initial sign-in state.
+//         updateSigninStatus(gapi.auth2.getAuthInstance().isSignedIn.get());
+//         authorizeButton.onclick = handleAuthClick;
+//         signoutButton.onclick = handleSignoutClick;
+//         });
+//       }
+function setToken(token){
+  gapi.client.setToken({
+        access_token: token
+      });
+}
 
 function handleClientLoad(){
   console.log("handleClientLoad: done");
@@ -107,11 +110,13 @@ function handleClientLoad(){
       // Handle gapi.client initialization.
       chrome.identity.getAuthToken({ 'interactive': true }, function(token) {
         // Use the token.
+        setToken(token);
         console.log("GOT IN");
         console.log(token);
-        gapi.client.setToken({
-          access_token: token
-        });
+      });
+
+      chrome.identity.onSignInChanged.addListener(function (account, signedIn) {
+          console.log("HELLO:", account, signedIn);
       });
       
     },
