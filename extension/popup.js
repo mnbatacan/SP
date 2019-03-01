@@ -3,9 +3,10 @@ $(document).ready(function(){
 
 	function getSignedInStatus(){
 		chrome.storage.sync.get("isSignedIn", function(data) {
-	        bkg.console.log("data: " + data.isSignedIn);
-	        updateSigninStatus(data.isSignedIn);
+	        bkg.console.log("isSignedIn: " + data.isSignedIn);
+			    updateSigninStatus(data.isSignedIn);
 	    });
+	    
 	}
 
 
@@ -90,9 +91,13 @@ $(document).ready(function(){
 
 	function setToken(token){
 		bkg.console.log(token);
-	  gapi.client.setToken({
+	 	 gapi.client.setToken({
 	        access_token: token
 	      });
+	 	 updateSigninStatus(true);
+		chrome.storage.sync.set({"authToken": token}, function() {
+          bkg.console.log('authToken is set to ' + token);
+        });
 
 	  buildApiRequest('GET',
 	   'https://www.googleapis.com/youtube/v3/channels',
@@ -102,34 +107,38 @@ $(document).ready(function(){
 
 
 
-	function buttonFunction(){
-		bkg.console.log("Button function in");
-	  updateSigninStatus(false);
-	  	$(authorizeButton).click(function(){
-		  // handleClientLoad();
-		  	  updateSigninStatus(true);
-
-		}); 
-	  // authorizeButton.onclick= handleClientLoad();
-	}
-
 	function handleClientLoad(){
 		bkg.console.log("handleClientLoad: done");
 		gapi.load('client', {
 		    callback: function() {
 		      // Handle gapi.client initialization.
 		      bkg.console.log("handleClientLoad callback");
-		      chrome.identity.getAuthToken({ 'interactive': true }, function(token) {
-		        // Use the token.
-		        bkg.console.log("handleClientLoad: chrome identity");
-		        setToken(token);
-		        updateSigninStatus(true);
-		        
-		      });
-		      	chrome.identity.onSignInChanged.addListener(function (account, signedIn) {
-				    bkg.console.log("HELLO:", account, signedIn);
-				    updateSigninStatus(true);
+
+		      	chrome.storage.sync.get("authToken", function(data) {
+			        bkg.console.log("data: " + data.authToken);
+			        if(data.authToken){ 
+			        	setToken(data.authToken);
+			        	updateSigninStatus(true);
+			        }
+			        else{
+			        	bkg.console.log("not signed in - open identity")
+				        chrome.identity.getAuthToken({ 'interactive': true }, function(token) {
+					        // Use the token.
+					        bkg.console.log(token);
+					        // updateSigninStatus(true);
+					        setToken(token);
+					        
+
+					      });
+				    }
 			    });
+
+
+		     
+		     //  	chrome.identity.onSignInChanged.addListener(function (account, signedIn) {
+				   //  bkg.console.log("HELLO:", account, signedIn);
+				   //  updateSigninStatus(true);
+			    // });
 
 
 		      
@@ -149,8 +158,10 @@ $(document).ready(function(){
 
  	if(authorizeButton){
  		getSignedInStatus();
-	 	bkg.console.log(authorizeButton.innerHTML);
-		$.loadScript("https://apis.google.com/js/api.js", buttonFunction())
+ 		$(authorizeButton).click(function(){
+	   		 $.loadScript("https://apis.google.com/js/api.js", handleClientLoad);
+	   	});
+		
  		
  	}
 
