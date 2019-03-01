@@ -12,6 +12,7 @@
  },
      "background": {
       "scripts": [
+        "jquery.js",
         "background.js"
       ],
       "persistent": false
@@ -24,6 +25,7 @@
   "permissions": [
       "identity",
       "activeTab",
+      "storage",
       "*://apis.google.com/*"
     ],
 
@@ -31,7 +33,7 @@
     {
       "matches": ["https://www.youtube.com/watch?v=*"],
       "css": ["inject.css"],
-      "js": ["jquery.js","inject.js","index.js","popup.js"],
+      "js": ["jquery.js","inject.js","index.js"],
       "run_at": "document_end",
       "all_frames":true
     }

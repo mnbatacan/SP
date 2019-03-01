@@ -1,5 +1,14 @@
 $(document).ready(function(){
 	var bkg = chrome.extension.getBackgroundPage();
+
+	function getSignedInStatus(){
+		chrome.storage.sync.get("isSignedIn", function(data) {
+	        bkg.console.log("data: " + data.isSignedIn);
+	        updateSigninStatus(data.isSignedIn);
+	    });
+	}
+
+
 	jQuery.loadScript = function (url, callback) {
 	    jQuery.ajax({
 	        url: url,
@@ -16,6 +25,14 @@ $(document).ready(function(){
 
   // authorizeButton.style.display = 'block'
 
+        // chrome.storage.sync.set({key: value}, function() {
+        //   console.log('Value is set to ' + value);
+        // });
+      
+        // chrome.storage.sync.get(['key'], function(result) {
+        //   console.log('Value currently is ' + result.key);
+        // });
+
   function updateSigninStatus(isSignedIn) {
 	  if (isSignedIn) {
 	    authorizeButton.style.display = 'none';
@@ -29,6 +46,10 @@ $(document).ready(function(){
 	        // this.content.style.display = 'none';
 	          // videoContainer.style.display = 'none';
 	  }
+
+	  chrome.storage.sync.set({"isSignedIn": isSignedIn}, function() {
+          bkg.console.log('isSignedIn is set to ' + isSignedIn);
+      });
 	}
 
 	function removeEmptyParams(params) {
@@ -85,7 +106,9 @@ $(document).ready(function(){
 		bkg.console.log("Button function in");
 	  updateSigninStatus(false);
 	  	$(authorizeButton).click(function(){
-		  handleClientLoad();
+		  // handleClientLoad();
+		  	  updateSigninStatus(true);
+
 		}); 
 	  // authorizeButton.onclick= handleClientLoad();
 	}
@@ -124,8 +147,11 @@ $(document).ready(function(){
  	}
 
 
-
- 	bkg.console.log(authorizeButton.innerHTML);
-	$.loadScript("https://apis.google.com/js/api.js", buttonFunction())
+ 	if(authorizeButton){
+ 		getSignedInStatus();
+	 	bkg.console.log(authorizeButton.innerHTML);
+		$.loadScript("https://apis.google.com/js/api.js", buttonFunction())
+ 		
+ 	}
 
 });
