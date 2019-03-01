@@ -31,61 +31,101 @@ $(document).ready(function(){
 	  }
 	}
 
-	// $.ajax({
-	//     url: 'https://apis.google.com/js/api.js?onload=buttonFunction',
-	//     dataType: 'script',
-	//     async: true,
-	//     defer: true
-	// });
+	function removeEmptyParams(params) {
+	    for (var p in params) {
+	      if (!params[p] || params[p] == 'undefined') {
+	        delete params[p];
+	      }
+	    }
+	    return params;
+	  }
 
+	function executeRequest(request) {
+	    request.execute(function(response) {
+	      bkg.console.log(response);
+	    });
+	  }
 
+	  function buildApiRequest(requestMethod, path, params, properties) {
+	    params = removeEmptyParams(params);
+	    var request;
+	    if (properties) {
+	      var resource = createResource(properties);
+	      request = gapi.client.request({
+	          'body': resource,
+	          'method': requestMethod,
+	          'path': path,
+	          'params': params
+	      });
+	    } else {
+	      request = gapi.client.request({
+	          'method': requestMethod,
+	          'path': path,
+	          'params': params
+	      });
+	    }
+	    executeRequest(request);
+	  }
 
- //    $.getScript("https://apis.google.com/js/api.js?onload=handleClientLoad", function(){
- //    	// if (this.readyState === 'complete'){handleClientLoad}
-	//   // alert("Script loaded and executed.");
+	function setToken(token){
+		bkg.console.log(token);
+	  gapi.client.setToken({
+	        access_token: token
+	      });
 
-	// });
-
-	function injectScript(){
-
-
-// // "https://apis.google.com/js/api.js"
-// //       onload="this.onload=function(){};handleClientLoad()"
-// //       onreadystatechange="if (this.readyState === 'complete') this.onload()
-
-
-//  $(document).ready(function(){
-//     $('.tabs').tabs();
-	  
-//   });
-		// bkg.console.log("injectscript");
-		// $.getScript("https://apis.google.com/js/api.js?onload=buttonFunction");
-	  // var head = document.getElementsByTagName('head')[0];
-	  // var script = document.createElement('script');
-	  // script.type = 'text/javascript';
-	  // script.async= true;
-	  // script.defer= true;
-	  // head.appendChild(script);
-
-	  // script.src = "https://apis.google.com/js/api.js?onload=buttonFunction";
+	  buildApiRequest('GET',
+	   'https://www.googleapis.com/youtube/v3/channels',
+	   {'mine': 'true',
+	   'part': 'id,snippet'});
 	}
+
+
 
 	function buttonFunction(){
 		bkg.console.log("Button function in");
 	  updateSigninStatus(false);
-	  authorizeButton.onclick= handleClientLoad();
+	  	$(authorizeButton).click(function(){
+		  handleClientLoad();
+		}); 
+	  // authorizeButton.onclick= handleClientLoad();
 	}
 
 	function handleClientLoad(){
- 	 bkg.console.log("handleClientLoad: done");
+		bkg.console.log("handleClientLoad: done");
+		gapi.load('client', {
+		    callback: function() {
+		      // Handle gapi.client initialization.
+		      bkg.console.log("handleClientLoad callback");
+		      chrome.identity.getAuthToken({ 'interactive': true }, function(token) {
+		        // Use the token.
+		        bkg.console.log("handleClientLoad: chrome identity");
+		        setToken(token);
+		        updateSigninStatus(true);
+		        
+		      });
+		      	chrome.identity.onSignInChanged.addListener(function (account, signedIn) {
+				    bkg.console.log("HELLO:", account, signedIn);
+				    updateSigninStatus(true);
+			    });
+
+
+		      
+		    },
+		    onerror: function() {
+		      // Handle loading error.
+		      alert('gapi.client failed to load!');
+		    },
+		    timeout: 5000, // 5 seconds.
+		    ontimeout: function() {
+		      // Handle timeout.
+		      alert('gapi.client could not load in a timely manner!');
+		    }
+		  });
  	}
 
+
+
  	bkg.console.log(authorizeButton.innerHTML);
- // 	if (typeof someObject == 'undefined') $.loadScript('url_to_someScript.js', function(){
-	//     //Stuff to do after someScript has loaded
-	// });
 	$.loadScript("https://apis.google.com/js/api.js", buttonFunction())
 
-	// updateSigninStatus(false);
-	// injectScript();
 });
