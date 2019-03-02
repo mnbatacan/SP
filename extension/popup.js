@@ -2,9 +2,14 @@ $(document).ready(function(){
 	var bkg = chrome.extension.getBackgroundPage();
 
 	function getSignedInStatus(){
+
 		chrome.storage.sync.get("isSignedIn", function(data) {
-	        bkg.console.log("isSignedIn: " + data.isSignedIn);
+	        // bkg.console.log("Intial check isSignedIn: " + data.isSignedIn);
+	        if(data.isSignedIn === true){
 			    updateSigninStatus(data.isSignedIn);
+			   	$.loadScript("https://apis.google.com/js/api.js", handleClientLoad);
+
+	        }
 	    });
 	    
 	}
@@ -62,11 +67,6 @@ $(document).ready(function(){
 	    return params;
 	  }
 
-	function executeRequest(request) {
-	    request.execute(function(response) {
-	      bkg.console.log(response);
-	    });
-	  }
 
 	  function buildApiRequest(requestMethod, path, params, properties) {
 	    params = removeEmptyParams(params);
@@ -86,7 +86,7 @@ $(document).ready(function(){
 	          'params': params
 	      });
 	    }
-	    executeRequest(request);
+	    setChannelDetails(request);
 	  }
 
 	function setToken(token){
@@ -99,10 +99,24 @@ $(document).ready(function(){
           bkg.console.log('authToken is set to ' + token);
         });
 
-	  buildApiRequest('GET',
+		// Get channel details
+	  var channelDetails = buildApiRequest('GET',
 	   'https://www.googleapis.com/youtube/v3/channels',
 	   {'mine': 'true',
 	   'part': 'id,snippet'});
+
+	  
+	  // setChannelDetails(channelDetails)
+
+
+	}
+
+	function setChannelDetails(request){
+		request.execute(function(response) {
+	      bkg.console.log(response.items[0]["snippet"]["title"]);
+	      document.getElementById("channel-name").innerHTML = response.items[0]["snippet"]["title"];
+	    });
+		
 	}
 
 
@@ -115,10 +129,20 @@ $(document).ready(function(){
 		      bkg.console.log("handleClientLoad callback");
 
 		      	chrome.storage.sync.get("authToken", function(data) {
-			        bkg.console.log("data: " + data.authToken);
 			        if(data.authToken){ 
-			        	setToken(data.authToken);
-			        	updateSigninStatus(true);
+			        	bkg.console.log("existing token: " + data.authToken);
+			        	chrome.identity.removeCachedAuthToken({token: data.authToken}, function(){
+			        		chrome.identity.getAuthToken({ 'interactive': true }, function(token) {
+					        // Use the token.
+						        bkg.console.log(token);
+						        // updateSigninStatus(true);
+						        setToken(token);
+						        
+
+						      });
+			        	})
+			        	// setToken(data.authToken);
+			        	// updateSigninStatus(true);
 			        }
 			        else{
 			        	bkg.console.log("not signed in - open identity")
