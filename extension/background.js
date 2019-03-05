@@ -9,19 +9,25 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse){
     }
 });
 
-// function callbackFunc(response){
-//   alert(response);
+function callbackFunc(response){
+  alert(response);
 
-// }
 
-// $.ajax({
-//   type: "POST",
-//   url: "backend/final_model.py"
-//   // data: { param: text}
-// }).done(function( o ) {
-//    // do something
-//    alert(o)
-// });
+
+}
+
+$.ajax({
+          type:"GET",
+          url: "http://localhost:5000/",
+          dataType:"json",
+          // data: "",
+          // type: 'get',
+          // dataType: 'json',
+          success: callbackFunc,
+          error: function(){
+            alert("error :(");
+          }
+});
 
 
 chrome.storage.local.get('state', function(result){

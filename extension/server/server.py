@@ -1,4 +1,5 @@
 from flask import Flask
+from flask import jsonify
 import pickle
 from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.feature_extraction.text import TfidfTransformer
@@ -22,7 +23,7 @@ def classify():
 	predicted = loaded_model.predict(strings)
 
 	# print(predicted)
-	print(accuracy_score(target, predicted))
+	# print(accuracy_score(target, predicted))
 	# return accuracy_score(target, predicted)
 # precision, recall, fscore, support = score(target, predicted)
 
@@ -32,5 +33,5 @@ def classify():
 # print('support: {}'.format(support))
 
 
-	return classify()
+	return jsonify(accuracy_score(target, predicted))
 
