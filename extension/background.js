@@ -9,6 +9,20 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse){
     }
 });
 
+// function callbackFunc(response){
+//   alert(response);
+
+// }
+
+// $.ajax({
+//   type: "POST",
+//   url: "backend/final_model.py"
+//   // data: { param: text}
+// }).done(function( o ) {
+//    // do something
+//    alert(o)
+// });
+
 
 chrome.storage.local.get('state', function(result){
     if(result.state){

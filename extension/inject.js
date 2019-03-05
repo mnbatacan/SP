@@ -24,7 +24,7 @@ var div = document.createElement( 'div' );
 var btn = document.createElement( 'input' );
 document.body.appendChild( div );
 div.appendChild( btn );
-div.appendChild( title);
+// div.appendChild( title);
 div.id = 'myDivId';
 div.style.position = 'fixed';
 div.style.alignContent='center';
@@ -57,7 +57,9 @@ btn.style.backgroundColor = '#3765AB';
 btn.style.color = 'white';
 
 
-
+function callbackFunc(response){
+	alert("yo!");
+}
 
 
 if( document.readyState === 'complete' ) {
@@ -69,19 +71,17 @@ if( document.readyState === 'complete' ) {
 	    // document.addEventListener("DOMContentLoaded", function(e){
 	    	$(document).on("click","#moderateBtn",function(){
 	    		console.log("hey???!!");
-				$.ajax({
-					url: 'http://localhost/ytest/index.php',
-					data: "name=bob",
-					type: 'get',
-					dataType: 'html',
-					success: function(data){
-						alert("success!");
-						console.log("medajsdhnaksjdhn" + data);
-					},
-					error: function(){
-						alert("error :(");
-					}
-				});
+				// $.ajax({
+				// 	type:"POST",
+				// 	url: "~/backend/final_model.py",
+				// 	// data: "",
+				// 	// type: 'get',
+				// 	// dataType: 'json',
+				// 	success: callbackFunc,
+				// 	error: function(){
+				// 		alert("error :(");
+				// 	}
+				// });
 			});
 		// },false)
 	};

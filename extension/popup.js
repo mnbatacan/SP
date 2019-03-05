@@ -68,7 +68,7 @@ $(document).ready(function(){
 	  }
 
 
-	  function buildApiRequest(requestMethod, path, params, properties) {
+	  function buildApiRequest(requestName,requestMethod, path, params, properties) {
 	    params = removeEmptyParams(params);
 	    var request;
 	    if (properties) {
@@ -86,7 +86,7 @@ $(document).ready(function(){
 	          'params': params
 	      });
 	    }
-	    setChannelDetails(request);
+	    if(requestName === "setChannelDetails"){setChannelDetails(request);}
 	  }
 
 	function setToken(token){
@@ -100,7 +100,7 @@ $(document).ready(function(){
         });
 
 		// Get channel details
-	  var channelDetails = buildApiRequest('GET',
+	  var channelDetails = buildApiRequest("setChannelDetails",'GET',
 	   'https://www.googleapis.com/youtube/v3/channels',
 	   {'mine': 'true',
 	   'part': 'id,snippet'});
