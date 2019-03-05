@@ -1,13 +1,13 @@
-#Project Title
+# Project Title
 
-##Project Overview
+## Project Overview
 
-##Built with
-####backend
+## Built with
+#### backend
 *	Python 3.6.7
 	*	scikit-learn 0.20.2
 *	Flask 1.0.2
 
 
-####frontend
+#### frontend
 *	Javascript, HTML, CSS
