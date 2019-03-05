@@ -17,8 +17,8 @@ def classify():
 	loaded_model = pickle.load(open(filename, 'rb'))
 	predicted = loaded_model.predict(strings)
 
-	# print(predicted)
-	# print(accuracy_score(target, predicted))
+	print(predicted)
+	print(accuracy_score(target, predicted))
 	return accuracy_score(target, predicted)
 # precision, recall, fscore, support = score(target, predicted)
 
@@ -27,5 +27,5 @@ def classify():
 # print('fscore: {}'.format(fscore))
 # print('support: {}'.format(support))
 
-
-return classify()
+classify()
+# return classify()
