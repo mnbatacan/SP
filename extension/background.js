@@ -10,24 +10,30 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse){
 });
 
 function callbackFunc(response){
-  alert(response);
+  // alert(response);
+  console.log("Connected to the server!")
+  console.log("Classifying accuracy score: "+response)
+  // return response
 
 
 
 }
 
-$.ajax({
-          type:"GET",
-          url: "http://localhost:5000/",
-          dataType:"json",
-          // data: "",
-          // type: 'get',
-          // dataType: 'json',
-          success: callbackFunc,
-          error: function(){
-            alert("error :(");
-          }
-});
+
+function getServer(){
+  $.ajax({
+            type:"GET",
+            url: "http://localhost:5000/",
+            dataType:"json",
+            // data: "",
+            // type: 'get',
+            // dataType: 'json',
+            success: callbackFunc,
+            error: function(){
+              alert("error :(");
+            }
+  });
+}
 
 
 chrome.storage.local.get('state', function(result){

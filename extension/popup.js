@@ -1,6 +1,12 @@
 $(document).ready(function(){
 	var bkg = chrome.extension.getBackgroundPage();
 
+	// chrome.runtime.getBackgroundPage(function(backgroundPageWindow) {
+	  // Do stuff here that requires access to the background page.
+	  // E.g. to access the function 'myFunction()'
+	  
+	// });
+
 	function getSignedInStatus(){
 
 		chrome.storage.sync.get("isSignedIn", function(data) {
@@ -28,6 +34,7 @@ $(document).ready(function(){
 
 	const authorizeButton = document.getElementById("authorize-button");
   const signoutButton = document.getElementById("signout-button");
+  const moderateButton = document.getElementById("moderate-button");
 
   // authorizeButton.style.display = 'block'
 
@@ -184,6 +191,9 @@ $(document).ready(function(){
  		getSignedInStatus();
  		$(authorizeButton).click(function(){
 	   		 $.loadScript("https://apis.google.com/js/api.js", handleClientLoad);
+	   	});
+ 		$(moderateButton).click(function(){
+	   		console.log("Calling myFunction() " + bkg.getServer());
 	   	});
 		
  		

@@ -57,6 +57,8 @@ btn.style.backgroundColor = '#3765AB';
 btn.style.color = 'white';
 
 
+// var bkg = chrome.extension.getBackgroundPage();
+
 function callbackFunc(response){
 	alert("yo!");
 }
@@ -70,7 +72,8 @@ if( document.readyState === 'complete' ) {
 	if('addEventListener' in document){
 	    // document.addEventListener("DOMContentLoaded", function(e){
 	    	$(document).on("click","#moderateBtn",function(){
-	    		console.log("hey???!!");
+	    		// alert("Calling myFunction() " + bkg.getServer());
+	    		
 				// $.ajax({
 				// 	type:"POST",
 				// 	url: "~/backend/final_model.py",

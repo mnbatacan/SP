@@ -9,9 +9,14 @@ from sklearn.metrics import make_scorer, accuracy_score, precision_score, recall
 
 
 def classify():
-	strings = ["back off you gay cunt", "he is just being a fucker", "you are a lyin bitch", "u a nigger", "just love sunshines", "i hate that teacher he is gay", "i love the color pink"]
+	strings = ["what is your problem do not you know jews control niggers read a book or two", 
+	"huge ass small waist  okay face  bitches really think they famous", "you are a lyin bitch", 
+	"u a nigger", 
+	"just love sunshines", 
+	"sunday funday hoe quotes",
+	"lmao niggas trying on outfits in the middle of the store on the strength of no homo"]
 
-	target = [0,1,1,0,2,1,2]
+	target = [0,1,1,0,2,1,0]
 
 	filename = 'finalized_model.sav'
 	loaded_model = pickle.load(open(filename, 'rb'))
