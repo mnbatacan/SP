@@ -1,24 +1,3 @@
-// $('a').click(function() {
-// 	alert("hey!");	
-// });
-
-// var btn = document.createElement("btn"); 
-// btn.innerHTML = '<button class="moderate" type="button">Moderate</button>';
-// $("body").append(btn);
-  // var greeting = "hola, ";
-  // var button = document.getElementById("mybutton");
-  // button.person_name = "Roberto";
-  // button.addEventListener("click", function() {
-  //   alert(greeting + button.person_name + ".");
-  // }, false);
-
-// var btn1 = document.createElement('btn');
-// btn1.id = 'popup';
-// document.body.appendChild(btn1);
-// document.getElementById('popup').innerHTML="My extension name"​;
-
-// document.getElementById.apply(document, arguments);
-// }
 src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"
 var div = document.createElement( 'div' );
 var btn = document.createElement( 'input' );
@@ -57,7 +36,6 @@ btn.style.backgroundColor = '#3765AB';
 btn.style.color = 'white';
 
 
-// var bkg = chrome.extension.getBackgroundPage();
 
 function callbackFunc(response){
 	alert("yo!");
@@ -70,27 +48,17 @@ if( document.readyState === 'complete' ) {
 } else {
 	
 	if('addEventListener' in document){
-	    // document.addEventListener("DOMContentLoaded", function(e){
 	    	$(document).on(	"click","#moderateBtn",function(){
-	    		// alert("Calling myFunction() " + bkg.getServer());
+				
+
+	    		//RETREIVE COMMENTS
+
+
 				chrome.runtime.sendMessage(
 				    "foo",
 				    function (response) {
 				        console.log(response);
 			    });
-	    		
-				// $.ajax({
-				// 	type:"POST",
-				// 	url: "~/backend/final_model.py",
-				// 	// data: "",
-				// 	// type: 'get',
-				// 	// dataType: 'json',
-				// 	success: callbackFunc,
-				// 	error: function(){
-				// 		alert("error :(");
-				// 	}
-				// });
 			});
-		// },false)
 	};
 }

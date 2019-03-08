@@ -1,11 +1,6 @@
 $(document).ready(function(){
 	var bkg = chrome.extension.getBackgroundPage();
 
-	// chrome.runtime.getBackgroundPage(function(backgroundPageWindow) {
-	  // Do stuff here that requires access to the background page.
-	  // E.g. to access the function 'myFunction()'
-	  
-	// });
 
 	function getSignedInStatus(){
 
@@ -36,15 +31,6 @@ $(document).ready(function(){
   const signoutButton = document.getElementById("signout-button");
   const moderateButton = document.getElementById("moderate-button");
 
-  // authorizeButton.style.display = 'block'
-
-        // chrome.storage.sync.set({key: value}, function() {
-        //   console.log('Value is set to ' + value);
-        // });
-      
-        // chrome.storage.sync.get(['key'], function(result) {
-        //   console.log('Value currently is ' + result.key);
-        // });
 
   function updateSigninStatus(isSignedIn) {
 	  if (isSignedIn) {

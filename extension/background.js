@@ -2,33 +2,25 @@
   //   chrome.tabs.create({url: 'index1.html'});
   // });
 
-
+//Storage listener
 chrome.runtime.onMessage.addListener(function(request, sender, sendResponse){
     if(request.saveState){
         chrome.storage.local.set(request.state, function(){ sendResponse(true)});
     }
 });
 
-function callbackFunc(response){
-  // alert(response);
-  console.log("Connected to the server!")
-  console.log("Classifying accuracy score: "+response)
-  // return sendResponseonse
 
-
-
-}
-
+// Inject button listener - for moderating
 chrome.runtime.onMessage.addListener(
     function(request, sender, sendResponse) {
         console.log("background.js got a message")
-        console.log(request);
+        console.log(sender);
         getServer();
         sendResponse("bar");
     }
 );
 
-
+// connecting to server
 function getServer(){
   $.ajax({
             type:"GET",
@@ -52,13 +44,6 @@ function getServer(){
 }
 
 
-chrome.runtime.onMessage.addListener(function(message) {
-        var receivedParameter = message.parameter;
-        console.log("from inject:" + message)
-
-        //use receivedParameter as you wish.
-
-    });
 
 
 chrome.storage.local.get('state', function(result){
