@@ -71,8 +71,13 @@ if( document.readyState === 'complete' ) {
 	
 	if('addEventListener' in document){
 	    // document.addEventListener("DOMContentLoaded", function(e){
-	    	$(document).on("click","#moderateBtn",function(){
+	    	$(document).on(	"click","#moderateBtn",function(){
 	    		// alert("Calling myFunction() " + bkg.getServer());
+				chrome.runtime.sendMessage(
+				    "foo",
+				    function (response) {
+				        console.log(response);
+			    });
 	    		
 				// $.ajax({
 				// 	type:"POST",

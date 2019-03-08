@@ -13,11 +13,20 @@ function callbackFunc(response){
   // alert(response);
   console.log("Connected to the server!")
   console.log("Classifying accuracy score: "+response)
-  // return response
+  // return sendResponseonse
 
 
 
 }
+
+chrome.runtime.onMessage.addListener(
+    function(request, sender, sendResponse) {
+        console.log("background.js got a message")
+        console.log(request);
+        getServer();
+        sendResponse("bar");
+    }
+);
 
 
 function getServer(){
@@ -28,12 +37,28 @@ function getServer(){
             // data: "",
             // type: 'get',
             // dataType: 'json',
-            success: callbackFunc,
+            success: function(response) {
+                // Run the code here that needs
+                //    to access the data returned
+                console.log("Connected to the server!")
+                console.log("Classifying accuracy score: "+response)
+                return response;
+            },
             error: function(){
               alert("error :(");
             }
   });
+
 }
+
+
+chrome.runtime.onMessage.addListener(function(message) {
+        var receivedParameter = message.parameter;
+        console.log("from inject:" + message)
+
+        //use receivedParameter as you wish.
+
+    });
 
 
 chrome.storage.local.get('state', function(result){

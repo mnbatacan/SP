@@ -14,9 +14,9 @@ def classify():
 	"u a nigger", 
 	"just love sunshines", 
 	"sunday funday hoe quotes",
-	"lmao niggas trying on outfits in the middle of the store on the strength of no homo"]
+	"hey girl"]
 
-	target = [0,1,1,0,2,1,0]
+	target = [0	,1,1,0,2,1,2]
 
 	filename = 'finalized_model.sav'
 	loaded_model = pickle.load(open(filename, 'rb'))
