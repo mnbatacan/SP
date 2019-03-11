@@ -107,7 +107,7 @@ def preproccessing(text):
     text = remove_usernames(text)
     text = p.clean(text)
     # print("hey: " + text)
-    text =  replace_contractions(preprocess_text(text))
+    # text =  replace_contractions(preprocess_text(text))
     # text = preprocess_text(text)
     # temp = nltk.word_tokenize(text)
     # stem_words(word_set['dictionary'])

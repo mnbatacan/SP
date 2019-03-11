@@ -1,3 +1,9 @@
+// ----------------------------------------------------------------------------------------------
+// Pop-up window js. 
+// Contains authorization, other main functions.
+// ----------------------------------------------------------------------------------------------
+
+
 $(document).ready(function(){
 	var bkg = chrome.extension.getBackgroundPage();
 
@@ -10,6 +16,8 @@ $(document).ready(function(){
 			    updateSigninStatus(data.isSignedIn);
 			   	$.loadScript("https://apis.google.com/js/api.js", handleClientLoad);
 
+	        }else{
+	        	updateSigninStatus(false);
 	        }
 	    });
 	    
@@ -29,19 +37,21 @@ $(document).ready(function(){
 
 	const authorizeButton = document.getElementById("authorize-button");
   const signoutButton = document.getElementById("signout-button");
-  const moderateButton = document.getElementById("moderate-button");
+  const channelButton = document.getElementById("channel-button");
 
 
   function updateSigninStatus(isSignedIn) {
 	  if (isSignedIn) {
 	    authorizeButton.style.display = 'none';
 	    signoutButton.style.display = 'block';
+	    channelButton.style.display = 'block';
 	     // content.style.display = 'block';
 	          // videoContainer.style.display = 'block';
 	          // getChannel(defaultChannel);
 	  } else {
 	    authorizeButton.style.display = 'block';
 	    signoutButton.style.display = 'none';
+	    channelButton.style.display = 'none';
 	        // this.content.style.display = 'none';
 	          // videoContainer.style.display = 'none';
 	  }
@@ -178,9 +188,9 @@ $(document).ready(function(){
  		$(authorizeButton).click(function(){
 	   		 $.loadScript("https://apis.google.com/js/api.js", handleClientLoad);
 	   	});
- 		$(moderateButton).click(function(){
-	   		console.log("Calling myFunction() " + bkg.getServer());
-	   	});
+ 		// $(moderateButton).click(function(){
+	  //  		console.log("Calling myFunction() " + bkg.getServer());
+	  //  	});
 		
  		
  	}

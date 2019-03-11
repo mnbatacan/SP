@@ -1,3 +1,11 @@
+// ----------------------------------------------------------------------------------------------
+// Adds an injected button on Youtube DOM. 
+// 
+// ----------------------------------------------------------------------------------------------
+
+
+
+// CSS ------------------------------------------------------------------------------------------
 src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"
 var div = document.createElement( 'div' );
 var btn = document.createElement( 'input' );
@@ -34,19 +42,17 @@ btn.style.marginTop = "14px";
 btn.class="waves-effect waves-light btn-large";
 btn.style.backgroundColor = '#3765AB';
 btn.style.color = 'white';
+// ----------------------------------------------------------------------------------------------
 
 
 
-function callbackFunc(response){
-	alert("yo!");
-}
 
-
+// ACTION----------------------------------------------------------------------------------------
 if( document.readyState === 'complete' ) {
     console.log( 'document is already ready, just execute code here' );
-    // myInitCode();
 } else {
 	
+	// will communicate with the background server on click.
 	if('addEventListener' in document){
 	    	$(document).on(	"click","#moderateBtn",function(){
 				
@@ -62,3 +68,5 @@ if( document.readyState === 'complete' ) {
 			});
 	};
 }
+
+// ----------------------------------------------------------------------------------------------

@@ -1,7 +1,12 @@
+<!-- CHROME EXTENSION POP-UP WINDOW HTML -->
+
+
 <!doctype html>
 <html>
   <head>
     <script src="jquery.js" type="text/javascript"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+    <link rel="stylesheet" type="text/css" href="inject.css">
      	<!-- <script type="text/javascript" src="index.js"></script> -->
 
 
@@ -10,16 +15,22 @@
   </head>
 
   <body>
-  <div id = "mainDiv">
-    <button type="button" class="waves-effect waves-light btn-flat" id="authorize-button" style="font-size: 12px;">Go to channel</button>
-	<button type="button" class="waves-effect waves-light btn-flat" id="signout-button" style="font-size: 12px;">Sign out</button>
-  <button type="button" class="waves-effect waves-light btn-flat" id="moderate-button" style="font-size: 12px;">Call Server</button>
-    <div id="channel-details">
+    <div id = "mainDiv">
+     <button type="button" class="waves-effect waves-light btn-flat" id="authorize-button" style="font-size: 12px;">Log in</button>
+
+
+     <!-- index pop-up-->
+    <div id="credentials-card">
       <h2 id="channel-name"></h2>
-   </div>
+      <button type="button" class="waves-effect waves-light btn-flat" id="channel-button" style="font-size: 12px;">Go to Channel</button>
+      <button type="button" class="waves-effect waves-light btn-flat" id="signout-button" style="font-size: 12px;">Sign out</button>
+    </div>
+
+    </div>
     <script type="text/javascript" src="background.js"></script>
        <script type="text/javascript" src="popup.js"></script>
-    <script type="text/javascript" src="inject.js"></script>
+    <!-- <script type="text/javascript" src="inject.js"></script> -->
+    </div>
   </body>
 
 </html>

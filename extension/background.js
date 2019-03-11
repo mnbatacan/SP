@@ -1,3 +1,9 @@
+// ----------------------------------------------------------------------------------------------
+// Chrome Extension Background script 
+// Contains listeners(extension storage, connection to server)
+// ---------------------------------------------------------------------------------------------- 
+
+
   // chrome.browserAction.onClicked.addListener(function() {
   //   chrome.tabs.create({url: 'index1.html'});
   // });
