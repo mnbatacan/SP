@@ -35,9 +35,10 @@ $(document).ready(function(){
 
 
 
-	const authorizeButton = document.getElementById("authorize-button");
+  const authorizeButton = document.getElementById("authorize-button");
   const signoutButton = document.getElementById("signout-button");
   const channelButton = document.getElementById("channel-button");
+  const moderateButton = document.getElementById("moderate-button");
 
 
   function updateSigninStatus(isSignedIn) {
@@ -71,6 +72,7 @@ $(document).ready(function(){
 	  }
 
 
+
 	  function buildApiRequest(requestName,requestMethod, path, params, properties) {
 	    params = removeEmptyParams(params);
 	    var request;
@@ -90,6 +92,7 @@ $(document).ready(function(){
 	      });
 	    }
 	    if(requestName === "setChannelDetails"){setChannelDetails(request);}
+	    else{retrieveComments(request);}
 	  }
 
 	function setToken(token){
@@ -103,14 +106,10 @@ $(document).ready(function(){
         });
 
 		// Get channel details
-	  var channelDetails = buildApiRequest("setChannelDetails",'GET',
-	   'https://www.googleapis.com/youtube/v3/channels',
-	   {'mine': 'true',
-	   'part': 'id,snippet'});
-
-	  
-	  // setChannelDetails(channelDetails)
-
+		  var channelDetails = buildApiRequest("setChannelDetails",'GET',
+		   'https://www.googleapis.com/youtube/v3/channels',
+		   {'mine': 'true',
+		   'part': 'id,snippet'});
 
 	}
 
@@ -118,6 +117,13 @@ $(document).ready(function(){
 		request.execute(function(response) {
 	      bkg.console.log(response.items[0]["snippet"]["title"]);
 	      document.getElementById("channel-name").innerHTML = response.items[0]["snippet"]["title"];
+	    });
+		
+	}
+
+	function retrieveComments(request){
+		request.execute(function(response) {
+	      bkg.console.log(response);
 	    });
 		
 	}
@@ -194,5 +200,24 @@ $(document).ready(function(){
 		
  		
  	}
+
+ 	function getCurrentURL(tabs) {
+	  var currentTab = tabs[0]; // there will be only one in this array
+	  bkg.console.log(currentTab.url); // also has properties like currentTab.id
+	  video_id = currentTab.url.split('v=')[1];
+		bkg.console.log("video id:" + video_id);
+		buildApiRequest("retrieveComments",'GET',
+                'https://www.googleapis.com/youtube/v3/commentThreads',
+                {'part': 'snippet,replies',
+                 'videoId': video_id});
+
+
+	}
+
+ 	$(moderateButton).click(function(){
+ 		var query = { active: true, currentWindow: true };
+ 		// gets the URL of the current tab
+ 		chrome.tabs.query(query, getCurrentURL);
+	});
 
 });
