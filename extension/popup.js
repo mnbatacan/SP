@@ -39,20 +39,29 @@ $(document).ready(function(){
   const signoutButton = document.getElementById("signout-button");
   const channelButton = document.getElementById("channel-button");
   const moderateButton = document.getElementById("moderate-button");
+  const indexPage = document.getElementById("index-page");
+  const mainPage = document.getElementById("mainDiv");
+
 
 
   function updateSigninStatus(isSignedIn) {
 	  if (isSignedIn) {
 	    authorizeButton.style.display = 'none';
+	    indexPage.style.display = 'none';
 	    signoutButton.style.display = 'block';
 	    channelButton.style.display = 'block';
+	    moderateButton.style.display = 'block';
+	    mainPage.style.display = 'block';
 	     // content.style.display = 'block';
 	          // videoContainer.style.display = 'block';
 	          // getChannel(defaultChannel);
 	  } else {
 	    authorizeButton.style.display = 'block';
+	    indexPage.style.display = 'block';
 	    signoutButton.style.display = 'none';
 	    channelButton.style.display = 'none';
+	    moderateButton.style.display = 'none';
+	    mainPage.style.display = 'none';
 	        // this.content.style.display = 'none';
 	          // videoContainer.style.display = 'none';
 	  }

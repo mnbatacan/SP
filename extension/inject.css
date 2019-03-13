@@ -9,6 +9,8 @@ button{
 	z-index: 100;
 	/*width: 40px;*/
 }
+
+/*INDEX PAGE*/
 #signout-button, #channel-button{
 	/*background-color: black;*/
 	display: none;
@@ -16,3 +18,45 @@ button{
 .button-holder{
 	display: inline;
 }
+
+#index-page{
+	padding-top:25%; 
+	/*margin-top: 10px;*/
+	margin-left: 15%;
+}
+
+#index-page>p{
+	margin-left: 4%;
+	margin-top: -2%;
+}
+
+#index-page>button{
+	margin-left: 12.5%;
+	width: 60%;
+	margin-top: 2%;
+}
+
+
+/*BUTTON HOVERS*/
+#authorize-button:hover{
+	background-color: #b2ebf2;
+	color: black;
+}
+
+#help-button:hover{
+	background-color: #ffb74d;
+	color: white;
+}
+
+#about-button:hover{
+	background-color: #66bb6a;
+	color: white;
+}
+
+
+
+
+/*END OF INDEX PAGE*/
+
+
+
