@@ -15,9 +15,6 @@ button{
 	/*background-color: black;*/
 	display: none;
 }
-.button-holder{
-	display: inline;
-}
 
 #index-page{
 	padding-top:25%; 
@@ -59,4 +56,33 @@ button{
 /*END OF INDEX PAGE*/
 
 
+/*MAIN DIV*/
+#credentials-card{
+	padding-top: 10px;
+	padding-bottom: 40px;
+	padding: 7px 10px 40px 10px;
+}
+#logo{
+	margin-left: 27%;
+	margin-top: 2%;
+}
+
+
+.button-holder, #channel-button, #signout-button{
+	display: inline-block;
+	position: absolute;
+	/*width: 100%;*/
+}
+#channel-button{
+	margin-right: -10px;
+	width: 110px;
+	padding-left: 3px;
+	padding-right: 3px;
+}
+
+#signout-button{
+	/*float: */
+	margin-left: 100px;
+	width: 80px;
+}
 
