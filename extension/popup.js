@@ -121,9 +121,13 @@ $(document).ready(function(){
 		
 	}
 
+
 	function retrieveComments(request){
 		request.execute(function(response) {
-	      bkg.console.log(response);
+			for(i = 0; i<3; i++){
+		      bkg.console.log(response.items[i].snippet.topLevelComment.snippet.textOriginal);
+			console.log("Calling myFunction() " + bkg.getServer(response.items[i].snippet.topLevelComment.snippet.textOriginal));
+			}
 	    });
 		
 	}
@@ -190,10 +194,14 @@ $(document).ready(function(){
 
 
  	if(authorizeButton){
- 		getSignedInStatus();
- 		$(authorizeButton).click(function(){
-	   		 $.loadScript("https://apis.google.com/js/api.js", handleClientLoad);
-	   	});
+		var bkg = chrome.extension.getBackgroundPage();
+		if(bkg){
+	 		getSignedInStatus();
+	 		$(authorizeButton).click(function(){
+		   		 $.loadScript("https://apis.google.com/js/api.js", handleClientLoad);
+		   	});
+			
+		}
  		// $(moderateButton).click(function(){
 	  //  		console.log("Calling myFunction() " + bkg.getServer());
 	  //  	});
