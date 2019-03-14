@@ -101,6 +101,7 @@ $(document).ready(function(){
 	      });
 	    }
 	    if(requestName === "setChannelDetails"){setChannelDetails(request);}
+	    else if(requestName === "flagComment"){flagComment(request);}
 	    else{retrieveComments(request);}
 	  }
 
@@ -131,15 +132,49 @@ $(document).ready(function(){
 	}
 
 
+	function flagComment(request) {
+	    request.execute(function(response) {
+	      bkg.console.log(response);
+	    });
+	}
+
+	function commentsSetModerationStatus(params) {
+		bkg.console.log(params);
+	  params = removeEmptyParams(params); // See full sample for function
+	  var request = gapi.client.youtube.comments.setModerationStatus(params);
+	  flagComment(request);
+	}
+
 	function retrieveComments(request){
+		var text, text_id;
 		request.execute(function(response) {
-			for(i = 0; i<3; i++){
-		      bkg.console.log(response.items[i].snippet.topLevelComment.snippet.textOriginal);
-			console.log("Calling myFunction() " + bkg.getServer(response.items[i].snippet.topLevelComment.snippet.textOriginal));
-			}
+			// for(i = 0; i<3; i++){
+				bkg.console.log(response);
+				var i = 1;
+				text_id = response.items[i].snippet.topLevelComment.id;
+				text = response.items[i].snippet.topLevelComment.snippet.textOriginal
+		
+				// bkg.getServer(text).then(function(data){
+				//     result = data;
+					bkg.console.log(text + " : " + text_id);
+				//     if(result ==! 2){
+					        // commentsSetModerationStatus({'id': text_id,
+             //     'moderationStatus': 'heldForReview'});
+					        buildApiRequest("flagComment",'POST',
+                'https://www.googleapis.com/youtube/v3/comments/setModerationStatus',
+                {'id': text_id,
+                 'moderationStatus': 'heldForReview'});
+				//     }
+				// }).then(function(){
+				//     // bkg.console.log(text + " : " + result);
+
+				// });
+			// }
 	    });
 		
 	}
+
+
 
 
 

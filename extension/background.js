@@ -27,20 +27,18 @@ chrome.runtime.onMessage.addListener(
 );
 
 // connecting to server
-function getServer(text){
-  $.ajax({
+async function getServer(text){
+  return $.ajax({
             type:"POST",
             url: "http://localhost:5000/",
             dataType:"json",
             data: text,
-            contentType: 'application/json',
-            success: function(data) {
-                console.log("Classifying accuracy score: "+ text + ": " + data)
-            },
-            error: function(){
-              // alert("error :(");
-            }
-  });
+            contentType: 'application/json'
+  }).then(
+   function (data) {
+      // console.log("Classifying accuracy score: "+ text + ": " + data);
+      return data;
+   });;
 
 }
 
