@@ -134,7 +134,13 @@ $(document).ready(function(){
 
 	function flagComment(request) {
 	    request.execute(function(response) {
-	      bkg.console.log(response);
+	    	if (typeof response === 'undefined') {
+			  // color is undefined
+			  bkg.console.log("comment was flagged!");
+			}else{
+				bkg.console.log("unsuccessful!");
+			}
+	      
 	    });
 	}
 
