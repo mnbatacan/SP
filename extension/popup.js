@@ -40,7 +40,9 @@ $(document).ready(function(){
   const channelButton = document.getElementById("channel-button");
   const moderateButton = document.getElementById("moderate-button");
   const indexPage = document.getElementById("index-page");
+  // const preloader = document.getElementById("preloader");
   const mainPage = document.getElementById("mainDiv");
+  var channelId = 1;
 
 
 
@@ -50,11 +52,14 @@ $(document).ready(function(){
 	    indexPage.style.display = 'none';
 	    signoutButton.style.display = 'block';
 	    channelButton.style.display = 'block';
-	    moderateButton.style.display = 'block';
 	    mainPage.style.display = 'block';
-	     // content.style.display = 'block';
-	          // videoContainer.style.display = 'block';
-	          // getChannel(defaultChannel);
+	    // preloader.style.display = 'block';
+	    // $(document).on('load', function() {
+	    // alert("asd")
+     //        $('.preloader').delay(350).fadeOut('slow');
+     //        $('.preloader-wrapper').delay(350).fadeOut();
+     //    });
+
 	  } else {
 	    authorizeButton.style.display = 'block';
 	    indexPage.style.display = 'block';
@@ -62,6 +67,7 @@ $(document).ready(function(){
 	    channelButton.style.display = 'none';
 	    moderateButton.style.display = 'none';
 	    mainPage.style.display = 'none';
+	     // preloader.style.display = 'none';
 	        // this.content.style.display = 'none';
 	          // videoContainer.style.display = 'none';
 	  }
@@ -119,14 +125,17 @@ $(document).ready(function(){
 		  var channelDetails = buildApiRequest("setChannelDetails",'GET',
 		   'https://www.googleapis.com/youtube/v3/channels',
 		   {'mine': 'true',
-		   'part': 'id,snippet'});
+		   'part': 'id,snippet,statistics'});
 
 	}
 
 	function setChannelDetails(request){
 		request.execute(function(response) {
-	      bkg.console.log(response.items[0]["snippet"]["title"]);
+	      bkg.console.log(response);
 	      document.getElementById("channel-name").innerHTML = response.items[0]["snippet"]["title"];
+	      document.getElementById("sub-count").innerHTML = response.items[0]["statistics"]["subscriberCount"] + " subscribers";
+	      document.getElementById("channel-thumbnail").src = response.items[0]["snippet"]["thumbnails"]["default"]["url"];
+	      channelId = response.items[0]["id"];
 	    });
 		
 	}
@@ -276,6 +285,14 @@ $(document).ready(function(){
  		var query = { active: true, currentWindow: true };
  		// gets the URL of the current tab
  		chrome.tabs.query(query, getCurrentURL);
+	});
+
+
+ 	// creates a new tab and goes to user's channel 
+	$(channelButton).click(function(){
+        chrome.tabs.create({ 
+        	url: "https://www.youtube.com/channel/" + channelId + "?view_as=subscriber"
+        });
 	});
 
 });
