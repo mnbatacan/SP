@@ -43,6 +43,9 @@ $(document).ready(function(){
   // const preloader = document.getElementById("preloader");
   const mainPage = document.getElementById("mainDiv");
   var channelId = 1;
+  var video_id = total_number_of_comments = total_number_of_views = 0;
+  var video_title = "";
+
 
 
 
@@ -108,6 +111,7 @@ $(document).ready(function(){
 	    }
 	    if(requestName === "setChannelDetails"){setChannelDetails(request);}
 	    else if(requestName === "flagComment"){flagComment(request);}
+	    else if(requestName === "getVideoDetails"){getVideoDetails(request);}
 	    else{retrieveComments(request);}
 	  }
 
@@ -153,6 +157,17 @@ $(document).ready(function(){
 	    });
 	}
 
+	function getVideoDetails(request){
+		request.execute(function(response) {
+			video_title = response.items[0].snippet.localized.title;
+			total_number_of_comments = response.items[0].statistics.commentCount;
+			total_number_of_views = response.items[0].statistics.viewCount;
+
+			// bkg.console.log("hey"+video_title + total_number_of_views + total_number_of_comments);
+			
+		});
+	}
+
 	function commentsSetModerationStatus(params) {
 		bkg.console.log(params);
 	  params = removeEmptyParams(params); // See full sample for function
@@ -163,28 +178,46 @@ $(document).ready(function(){
 	function retrieveComments(request){
 		var text, text_id;
 		request.execute(function(response) {
-			// for(i = 0; i<3; i++){
-				bkg.console.log(response);
-				var i = 1;
-				text_id = response.items[i].snippet.topLevelComment.id;
-				text = response.items[i].snippet.topLevelComment.snippet.textOriginal
+			var item_count = (response.items).length;
+			var reply_count = 0;
+			bkg.console.log(response);
+			for(i = 0; i<item_count; i++){
+				reply_count = 0;
+				bkg.console.log(i + " : " + response.items[i].snippet.topLevelComment.snippet.textOriginal);
+				if(response.items[i].replies) reply_count = (response.items[i].replies.comments).length;
+				for(j = 0; j < reply_count; j++){
+					bkg.console.log("comment: " + response.items[i].replies.comments[j].snippet.textOriginal);
+				}
+				// var i = 1;
+				// text_id = response.items[i].snippet.topLevelComment.id;
+				// text = response.items[i].snippet.topLevelComment.snippet.textOriginal
 		
-				// bkg.getServer(text).then(function(data){
-				//     result = data;
-					bkg.console.log(text + " : " + text_id);
-				//     if(result ==! 2){
-					        // commentsSetModerationStatus({'id': text_id,
-             //     'moderationStatus': 'heldForReview'});
-					        buildApiRequest("flagComment",'POST',
-                'https://www.googleapis.com/youtube/v3/comments/setModerationStatus',
-                {'id': text_id,
-                 'moderationStatus': 'heldForReview'});
-				//     }
-				// }).then(function(){
+				// // bkg.getServer(text).then(function(data){
+				// //     result = data;
+				// 	bkg.console.log(text + " : " + text_id);
+				// //     if(result ==! 2){
+				// 	        // commentsSetModerationStatus({'id': text_id,
+    //          //     'moderationStatus': 'heldForReview'});
+				// 	        buildApiRequest("flagComment",'POST',
+    //             'https://www.googleapis.com/youtube/v3/comments/setModerationStatus',
+    //             {'id': text_id,
+    //              'moderationStatus': 'heldForReview'});
+				// //     }
+				// // }).then(function(){
 				//     // bkg.console.log(text + " : " + result);
 
 				// });
-			// }
+				if(item_count > 50){
+					if(response.nextPageToken){
+						buildApiRequest("retrieveComments",'GET',
+		                'https://www.googleapis.com/youtube/v3/commentThreads',
+		                {'part': 'snippet,replies',
+		                'maxResults': 50,
+		                'pageToken': response.nextPageToken,
+		                 'videoId': video_id});
+					}
+				}
+			}
 	    });
 		
 	}
@@ -273,9 +306,18 @@ $(document).ready(function(){
 	  bkg.console.log(currentTab.url); // also has properties like currentTab.id
 	  video_id = currentTab.url.split('v=')[1];
 		bkg.console.log("video id:" + video_id);
+
+		//get video Details
+		buildApiRequest("getVideoDetails",'GET',
+                'https://www.googleapis.com/youtube/v3/videos',
+                {'id': video_id,
+                 'part': 'snippet,contentDetails,statistics'});
+
+		// get the commentThreads
 		buildApiRequest("retrieveComments",'GET',
                 'https://www.googleapis.com/youtube/v3/commentThreads',
                 {'part': 'snippet,replies',
+                'maxResults': 50,
                  'videoId': video_id});
 
 
@@ -294,5 +336,7 @@ $(document).ready(function(){
         	url: "https://www.youtube.com/channel/" + channelId + "?view_as=subscriber"
         });
 	});
+
+	
 
 });
