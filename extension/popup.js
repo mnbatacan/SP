@@ -40,6 +40,7 @@ $(document).ready(function(){
   const channelButton = document.getElementById("channel-button");
   const moderateButton = document.getElementById("moderate-button");
   const indexPage = document.getElementById("index-page");
+  const videoTitle = document.getElementById("video-title");
   // const preloader = document.getElementById("preloader");
   const mainPage = document.getElementById("mainDiv");
   var channelId = 1;
@@ -169,7 +170,9 @@ $(document).ready(function(){
 			video_title = response.items[0].snippet.localized.title;
 			total_number_of_comments = response.items[0].statistics.commentCount;
 			total_number_of_views = response.items[0].statistics.viewCount;
-
+			videoTitle.innerHTML = video_title;
+			document.getElementById("total_views").innerHTML = total_number_of_views + " views";
+			document.getElementById("total_comments").innerHTML = total_number_of_comments + " comments";
 			bkg.console.log("hey"+video_title + total_number_of_views + total_number_of_comments);
 			
 		});
@@ -303,9 +306,6 @@ $(document).ready(function(){
 		   	});
 			
 		}
- 		// $(moderateButton).click(function(){
-	  //  		console.log("Calling myFunction() " + bkg.getServer());
-	  //  	});
 		
  		
  	}
@@ -316,23 +316,17 @@ $(document).ready(function(){
 
  			for(i = 0; i < response.items.length; i++){
  				if(response.items[i].contentDetails.videoId === video_id){
- 								//get video Details
+ 					//get video Details
 					buildApiRequest("getVideoDetails",'GET',
 		                'https://www.googleapis.com/youtube/v3/videos',
 		                {'id': video_id,
 		                 'part': 'snippet,contentDetails,statistics'});
 		 			moderateButton.disabled = false;
+
 		 			break;
 		 		}
  			}
  		});
-	 //  var currentTab = tabs[0]; // there will be only one in this array
-	 //  bkg.console.log(currentTab.url); // also has properties like currentTab.id
-	 //  video_id = currentTab.url.split('v=')[1];
-		// bkg.console.log("video id:" + video_id);
-
-		// get the commentThreads
-		
 
 	}
 
@@ -343,12 +337,7 @@ $(document).ready(function(){
 		if(currentTab.url.indexOf("v=") !== -1){
 			video_id = currentTab.url.split('v=')[1];
 			bkg.console.log("video id:" + video_id);
-
 			var uploads_id = channel_response.items[0].contentDetails.relatedPlaylists.uploads;
-
-
-
-
 			// get all list of user videos.
 			buildApiRequest("checkVideoId",'GET',
                 'https://www.googleapis.com/youtube/v3/playlistItems',
