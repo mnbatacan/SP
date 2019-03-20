@@ -44,8 +44,8 @@ $(document).ready(function(){
   const mainPage = document.getElementById("mainDiv");
   var channelId = 1;
   var video_id = total_number_of_comments = total_number_of_views = 0;
-  var video_title = "";
-
+  var video_title = uploads_id = "";
+  var channel_response = {}
 
 
 
@@ -112,6 +112,7 @@ $(document).ready(function(){
 	    if(requestName === "setChannelDetails"){setChannelDetails(request);}
 	    else if(requestName === "flagComment"){flagComment(request);}
 	    else if(requestName === "getVideoDetails"){getVideoDetails(request);}
+	    else if(requestName === "checkVideoId"){checkVideoId(request);}
 	    else{retrieveComments(request);}
 	  }
 
@@ -129,17 +130,23 @@ $(document).ready(function(){
 		  var channelDetails = buildApiRequest("setChannelDetails",'GET',
 		   'https://www.googleapis.com/youtube/v3/channels',
 		   {'mine': 'true',
-		   'part': 'id,snippet,statistics'});
+		   'part': 'id,snippet,statistics,contentDetails'});
 
 	}
 
 	function setChannelDetails(request){
 		request.execute(function(response) {
-	      bkg.console.log(response);
+	      // bkg.console.log(response);
 	      document.getElementById("channel-name").innerHTML = response.items[0]["snippet"]["title"];
 	      document.getElementById("sub-count").innerHTML = response.items[0]["statistics"]["subscriberCount"] + " subscribers";
 	      document.getElementById("channel-thumbnail").src = response.items[0]["snippet"]["thumbnails"]["default"]["url"];
 	      channelId = response.items[0]["id"];
+	      bkg.console.log(response);
+	      var query = { active: true, currentWindow: true };
+ 		// gets the URL of the current tab
+ 		channel_response = response;
+ 			chrome.tabs.query(query, checkCurrentURL);
+
 	    });
 		
 	}
@@ -163,7 +170,7 @@ $(document).ready(function(){
 			total_number_of_comments = response.items[0].statistics.commentCount;
 			total_number_of_views = response.items[0].statistics.viewCount;
 
-			// bkg.console.log("hey"+video_title + total_number_of_views + total_number_of_comments);
+			bkg.console.log("hey"+video_title + total_number_of_views + total_number_of_comments);
 			
 		});
 	}
@@ -207,7 +214,8 @@ $(document).ready(function(){
 				//     // bkg.console.log(text + " : " + result);
 
 				// });
-				if(item_count > 50){
+				// if(item_count > 50){
+					// bkg.console.log(response.nextPageToken)
 					if(response.nextPageToken){
 						buildApiRequest("retrieveComments",'GET',
 		                'https://www.googleapis.com/youtube/v3/commentThreads',
@@ -216,7 +224,7 @@ $(document).ready(function(){
 		                'pageToken': response.nextPageToken,
 		                 'videoId': video_id});
 					}
-				}
+				// }
 			}
 	    });
 		
@@ -287,6 +295,7 @@ $(document).ready(function(){
 
  	if(authorizeButton){
 		var bkg = chrome.extension.getBackgroundPage();
+		moderateButton.disabled = true;
 		if(bkg){
 	 		getSignedInStatus();
 	 		$(authorizeButton).click(function(){
@@ -301,32 +310,63 @@ $(document).ready(function(){
  		
  	}
 
- 	function getCurrentURL(tabs) {
-	  var currentTab = tabs[0]; // there will be only one in this array
-	  bkg.console.log(currentTab.url); // also has properties like currentTab.id
-	  video_id = currentTab.url.split('v=')[1];
-		bkg.console.log("video id:" + video_id);
+ 	function checkVideoId(request) {
+ 		request.execute(function(response) {
+ 			bkg.console.log(response);
 
-		//get video Details
-		buildApiRequest("getVideoDetails",'GET',
-                'https://www.googleapis.com/youtube/v3/videos',
-                {'id': video_id,
-                 'part': 'snippet,contentDetails,statistics'});
+ 			for(i = 0; i < response.items.length; i++){
+ 				if(response.items[i].contentDetails.videoId === video_id){
+ 								//get video Details
+					buildApiRequest("getVideoDetails",'GET',
+		                'https://www.googleapis.com/youtube/v3/videos',
+		                {'id': video_id,
+		                 'part': 'snippet,contentDetails,statistics'});
+		 			moderateButton.disabled = false;
+		 			break;
+		 		}
+ 			}
+ 		});
+	 //  var currentTab = tabs[0]; // there will be only one in this array
+	 //  bkg.console.log(currentTab.url); // also has properties like currentTab.id
+	 //  video_id = currentTab.url.split('v=')[1];
+		// bkg.console.log("video id:" + video_id);
 
 		// get the commentThreads
-		buildApiRequest("retrieveComments",'GET',
+		
+
+	}
+
+	function checkCurrentURL(tabs){
+		var currentTab = tabs[0];
+		bkg.console.log(currentTab.url);
+		// moderateButton.disabled = true;
+		if(currentTab.url.indexOf("v=") !== -1){
+			video_id = currentTab.url.split('v=')[1];
+			bkg.console.log("video id:" + video_id);
+
+			var uploads_id = channel_response.items[0].contentDetails.relatedPlaylists.uploads;
+
+
+
+
+			// get all list of user videos.
+			buildApiRequest("checkVideoId",'GET',
+                'https://www.googleapis.com/youtube/v3/playlistItems',
+                {'maxResults': '50',
+                 'part': 'snippet,contentDetails',
+                 'playlistId': uploads_id});
+
+
+		}
+	}
+
+ 	$(moderateButton).click(function(){
+ 		buildApiRequest("retrieveComments",'GET',
                 'https://www.googleapis.com/youtube/v3/commentThreads',
                 {'part': 'snippet,replies',
                 'maxResults': 50,
                  'videoId': video_id});
 
-
-	}
-
- 	$(moderateButton).click(function(){
- 		var query = { active: true, currentWindow: true };
- 		// gets the URL of the current tab
- 		chrome.tabs.query(query, getCurrentURL);
 	});
 
 
