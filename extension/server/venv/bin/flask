@@ -1,5 +1,4 @@
-#!/home/mnbatacan/Documents/SP_Backend/extension/server/venv/bin/python3
-
+#!/home/mnbatacan/Documents/SP_Backend/extension/server/venv/bin/python2.7
 # -*- coding: utf-8 -*-
 import re
 import sys

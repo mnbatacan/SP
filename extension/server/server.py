@@ -11,7 +11,6 @@ from sklearn.metrics import precision_recall_fscore_support as score
 from sklearn.metrics import make_scorer, accuracy_score, precision_score, recall_score, f1_score
 
 app = Flask(__name__)
-app.run(debug=True)
 @app.route('/',methods=['GET', 'POST'])
 
 
@@ -49,3 +48,5 @@ def classify():
 # # print('recall: {}'.format(recall))
 # # print('fscore: {}'.format(fscore))
 # # print('support: {}'.format(support))
+if __name__ == "__main__":
+    app.run(debug=True)

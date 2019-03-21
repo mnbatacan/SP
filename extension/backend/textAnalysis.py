@@ -63,7 +63,7 @@ final_clf.fit(x_train, y_train)
 
 # PICKLE
 filename = 'finalized_model.sav'
-pickle.dump(final_clf, open(filename, 'wb'))
+pickle.dump(final_clf, open(filename, 'wb'),protocol=2)
 
 
 loaded_model = pickle.load(open(filename, 'rb'))

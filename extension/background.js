@@ -31,6 +31,7 @@ async function getServer(text){
   return $.ajax({
             type:"POST",
             url: "http://localhost:5000/",
+            // url: "https://ytest-219100.appspot.com",
             dataType:"json",
             data: text,
             contentType: 'application/json'
