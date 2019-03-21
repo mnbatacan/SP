@@ -185,38 +185,51 @@ $(document).ready(function(){
 	  flagComment(request);
 	}
 
+	function flagComment(text,text_id){
+				bkg.getServer(text).then(function(data){
+				    result = data;
+					// bkg.console.log(text + " : " + text_id);
+				    if(result ==! 2){
+					    // commentsSetModerationStatus({'id': text_id,
+         //        		 'moderationStatus': 'heldForReview'});
+					        buildApiRequest("flagComment",'POST',
+		                'https://www.googleapis.com/youtube/v3/comments/setModerationStatus',
+		                {'id': text_id,
+		                 'moderationStatus': 'heldForReview'});
+				    }
+				}).then(function(){
+				    bkg.console.log(text + " : " + result);
+
+				});
+	}
+
 	function retrieveComments(request){
 		var text, text_id;
 		request.execute(function(response) {
 			var item_count = (response.items).length;
 			var reply_count = 0;
+			text = text_id = "";
+
 			bkg.console.log(response);
 			for(i = 0; i<item_count; i++){
 				reply_count = 0;
-				bkg.console.log(i + " : " + response.items[i].snippet.topLevelComment.snippet.textOriginal);
+				// bkg.console.log(i + " : " + response.items[i].snippet.topLevelComment.snippet.textOriginal);
+				text_id = response.items[i].snippet.topLevelComment.id;
+				text = response.items[i].snippet.topLevelComment.snippet.textOriginal
+				flagComment(text,text_id);
+
+
+
 				if(response.items[i].replies) reply_count = (response.items[i].replies.comments).length;
 				for(j = 0; j < reply_count; j++){
-					bkg.console.log("comment: " + response.items[i].replies.comments[j].snippet.textOriginal);
+					text_id = response.items[i].replies.comments[j].id;
+					text = response.items[i].replies.comments[j].snippet.textOriginal;
+					flagComment(text,text_id);
+					// bkg.console.log("comment: " + response.items[i].replies.comments[j].snippet.textOriginal);
 				}
 				// var i = 1;
-				// text_id = response.items[i].snippet.topLevelComment.id;
-				// text = response.items[i].snippet.topLevelComment.snippet.textOriginal
 		
-				// // bkg.getServer(text).then(function(data){
-				// //     result = data;
-				// 	bkg.console.log(text + " : " + text_id);
-				// //     if(result ==! 2){
-				// 	        // commentsSetModerationStatus({'id': text_id,
-    //          //     'moderationStatus': 'heldForReview'});
-				// 	        buildApiRequest("flagComment",'POST',
-    //             'https://www.googleapis.com/youtube/v3/comments/setModerationStatus',
-    //             {'id': text_id,
-    //              'moderationStatus': 'heldForReview'});
-				// //     }
-				// // }).then(function(){
-				//     // bkg.console.log(text + " : " + result);
 
-				// });
 				// if(item_count > 50){
 					// bkg.console.log(response.nextPageToken)
 					if(response.nextPageToken){
