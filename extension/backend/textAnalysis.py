@@ -62,7 +62,7 @@ final_clf = Pipeline([
 final_clf.fit(x_train, y_train)
 
 # PICKLE
-filename = 'finalized_model.sav'
+filename = 'finalized_model.pickle'
 pickle.dump(final_clf, open(filename, 'wb'),protocol=2)
 
 

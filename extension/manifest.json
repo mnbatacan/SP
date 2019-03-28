@@ -27,12 +27,13 @@
       "activeTab",
       "storage",
       "*://apis.google.com/*",
-      "http://localhost:5000/"
+      "http://localhost:5000/",
+      "https://blooming-retreat-18848.herokuapp.com/"
     ],
 
 "content_scripts": [
     {
-      "matches": ["https://www.youtube.com/watch?v=*"],
+      "matches": ["https://www.youtube.com/watch?v=*","https://ytest-219100.appspot.com/"],
       // "matches": ["<all_urls >"],
       "css": ["inject.css"],
       "js": ["jquery.js","index.js"],

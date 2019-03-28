@@ -27,10 +27,10 @@ chrome.runtime.onMessage.addListener(
 );
 
 // connecting to server
-async function getServer(text){
+function getServer(text){
   return $.ajax({
             type:"POST",
-            url: "http://localhost:5000/",
+            url: "https://blooming-retreat-18848.herokuapp.com/",
             // url: "https://ytest-219100.appspot.com",
             dataType:"json",
             data: text,

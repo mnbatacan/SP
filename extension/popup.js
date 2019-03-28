@@ -114,6 +114,7 @@ $(document).ready(function(){
 	    else if(requestName === "flagComment"){flagComment(request);}
 	    else if(requestName === "getVideoDetails"){getVideoDetails(request);}
 	    else if(requestName === "checkVideoId"){checkVideoId(request);}
+	    else if(requestName === "flagComment_request"){flagComment_request(request);}
 	    else{retrieveComments(request);}
 	  }
 
@@ -185,22 +186,39 @@ $(document).ready(function(){
 	  flagComment(request);
 	}
 
-	function flagComment(text,text_id){
-				bkg.getServer(text).then(function(data){
-				    result = data;
-					// bkg.console.log(text + " : " + text_id);
-				    if(result ==! 2){
-					    // commentsSetModerationStatus({'id': text_id,
-         //        		 'moderationStatus': 'heldForReview'});
-					        buildApiRequest("flagComment",'POST',
-		                'https://www.googleapis.com/youtube/v3/comments/setModerationStatus',
-		                {'id': text_id,
-		                 'moderationStatus': 'heldForReview'});
-				    }
-				}).then(function(){
-				    bkg.console.log(text + " : " + result);
+	function flagComment_request(request){
+		request.execute(function(response) {
+			// bkg.console.log(text + " : " + text_id);
 
-				});
+
+		});
+
+	}
+
+	function flagComment(text,text_id){
+				//     if(result ==! 2){
+				// 	    // commentsSetModerationStatus({'id': text_id,
+    //      //        		 'moderationStatus': 'heldForReview'});
+				// 	        buildApiRequest("flagComment",'POST',
+		  //               'https://www.googleapis.com/youtube/v3/comments/setModerationStatus',
+		  //               {'id': text_id,
+		  //                'moderationStatus': 'heldForReview'});
+				//     }
+				//     bkg.console.log(text + " : " + result);
+
+				// });
+		bkg.getServer(text).then(function(data){
+		    result = data;
+		    bkg.console.log(text, " : result - ", result)
+			if(result[0] != 2){
+			bkg.console.log(" flagged!!!! " + text);
+			 buildApiRequest("flagComment_request",'POST',
+			                'https://www.googleapis.com/youtube/v3/comments/setModerationStatus',
+			                {'id': text_id,
+			                 'moderationStatus': 'heldForReview'});
+			}
+		});
+
 	}
 
 	function retrieveComments(request){
@@ -213,9 +231,9 @@ $(document).ready(function(){
 			bkg.console.log(response);
 			for(i = 0; i<item_count; i++){
 				reply_count = 0;
-				// bkg.console.log(i + " : " + response.items[i].snippet.topLevelComment.snippet.textOriginal);
 				text_id = response.items[i].snippet.topLevelComment.id;
 				text = response.items[i].snippet.topLevelComment.snippet.textOriginal
+				bkg.console.log(i + " : " + response.items[i].snippet.topLevelComment.snippet.textOriginal);
 				flagComment(text,text_id);
 
 
@@ -224,8 +242,8 @@ $(document).ready(function(){
 				for(j = 0; j < reply_count; j++){
 					text_id = response.items[i].replies.comments[j].id;
 					text = response.items[i].replies.comments[j].snippet.textOriginal;
+					bkg.console.log("comment: " + response.items[i].replies.comments[j].snippet.textOriginal);
 					flagComment(text,text_id);
-					// bkg.console.log("comment: " + response.items[i].replies.comments[j].snippet.textOriginal);
 				}
 				// var i = 1;
 		
