@@ -48,7 +48,7 @@ $(document).ready(function(){
   const mainPage = document.getElementById("mainDiv");
   var channelId = 1;
   var video_id = total_number_of_comments = total_number_of_views = 0;
-  var video_title = uploads_id = "";
+  var video_title = uploads_id = text = text_id = "";
   var channel_response = {}
 
 
@@ -195,7 +195,7 @@ $(document).ready(function(){
 
 	function flagComment_request(request){
 		request.execute(function(response) {
-			// bkg.console.log(text + " : " + text_id);
+			bkg.console.log("flagged:" + text + " : " + text_id);
 
 
 		});
@@ -218,7 +218,7 @@ $(document).ready(function(){
 		    result = data;
 		    bkg.console.log(text, " : result - ", result)
 			if(result[0] != 2){
-			bkg.console.log(" flagged!!!! " + text);
+			// bkg.console.log(" flagged!!!! " + text);
 			 buildApiRequest("flagComment_request",'POST',
 			                'https://www.googleapis.com/youtube/v3/comments/setModerationStatus',
 			                {'id': text_id,
@@ -229,7 +229,7 @@ $(document).ready(function(){
 	}
 
 	function retrieveComments(request){
-		var text, text_id;
+		// text, text_id;
 		request.execute(function(response) {
 			var item_count = (response.items).length;
 			var reply_count = 0;
@@ -240,8 +240,10 @@ $(document).ready(function(){
 				reply_count = 0;
 				text_id = response.items[i].snippet.topLevelComment.id;
 				text = response.items[i].snippet.topLevelComment.snippet.textOriginal
-				bkg.console.log(i + " : " + response.items[i].snippet.topLevelComment.snippet.textOriginal);
-				flagComment(text,text_id);
+				if(!response.items[i].snippet.topLevelComment.snippet.hasOwnProperty("moderationStatus")){
+					bkg.console.log(i + " : " + response.items[i].snippet.topLevelComment.snippet.textOriginal);
+					flagComment(text,text_id);
+				} 
 
 
 
@@ -249,8 +251,10 @@ $(document).ready(function(){
 				for(j = 0; j < reply_count; j++){
 					text_id = response.items[i].replies.comments[j].id;
 					text = response.items[i].replies.comments[j].snippet.textOriginal;
-					bkg.console.log("comment: " + response.items[i].replies.comments[j].snippet.textOriginal);
-					flagComment(text,text_id);
+					if(!response.items[i].replies.comments[j].snippet.hasOwnProperty("moderationStatus")){
+						bkg.console.log("comment: " + response.items[i].replies.comments[j].snippet.textOriginal);
+						flagComment(text,text_id);
+					} 
 				}
 				// var i = 1;
 		
@@ -267,6 +271,8 @@ $(document).ready(function(){
 					}
 				// }
 			}
+
+			alert("Video Moderated!");
 	    });
 		
 	}
@@ -379,6 +385,13 @@ $(document).ready(function(){
 		if(currentTab.url.indexOf("v=") !== -1){
 			video_id = currentTab.url.split('v=')[1];
 			bkg.console.log("video id:" + video_id);
+
+			$(analyticsButton).click(function(){
+		        chrome.tabs.create({ 
+		        	url: "https://studio.youtube.com/video/" + video_id + "/comments/moderate?utm_campaign=upgrade&utm_medium=redirect&utm_source=%2Fcomments"
+		        });
+			});
+
 			var uploads_id = channel_response.items[0].contentDetails.relatedPlaylists.uploads;
 			// get all list of user videos.
 			buildApiRequest("checkVideoId",'GET',
@@ -407,6 +420,10 @@ $(document).ready(function(){
         	url: "https://www.youtube.com/channel/" + channelId + "?view_as=subscriber"
         });
 	});
+
+
+	 	// creates a new tab and goes to user's channel 
+
 
 	
 
