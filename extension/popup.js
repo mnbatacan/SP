@@ -38,10 +38,13 @@ $(document).ready(function(){
   const authorizeButton = document.getElementById("authorize-button");
   const signoutButton = document.getElementById("signout-button");
   const channelButton = document.getElementById("channel-button");
+  const analyticsButton = document.getElementById("analytics-button");
+
   const moderateButton = document.getElementById("moderate-button");
+  const vidStatistics = document.getElementById("vid-statistics");
   const indexPage = document.getElementById("index-page");
   const videoTitle = document.getElementById("video-title");
-  // const preloader = document.getElementById("preloader");
+  const preloader = document.getElementById("preloader");
   const mainPage = document.getElementById("mainDiv");
   var channelId = 1;
   var video_id = total_number_of_comments = total_number_of_views = 0;
@@ -56,8 +59,8 @@ $(document).ready(function(){
 	    indexPage.style.display = 'none';
 	    signoutButton.style.display = 'block';
 	    channelButton.style.display = 'block';
-	    mainPage.style.display = 'block';
-	    // preloader.style.display = 'block';
+	    // mainPage.style.display = 'block';
+	    preloader.style.display = 'block';
 	    // $(document).on('load', function() {
 	    // alert("asd")
      //        $('.preloader').delay(350).fadeOut('slow');
@@ -71,7 +74,7 @@ $(document).ready(function(){
 	    channelButton.style.display = 'none';
 	    moderateButton.style.display = 'none';
 	    mainPage.style.display = 'none';
-	     // preloader.style.display = 'none';
+	     preloader.style.display = 'none';
 	        // this.content.style.display = 'none';
 	          // videoContainer.style.display = 'none';
 	  }
@@ -146,6 +149,10 @@ $(document).ready(function(){
 	      bkg.console.log(response);
 	      var query = { active: true, currentWindow: true };
  		// gets the URL of the current tab
+ 		mainPage.style.display = "block";
+ 		preloader.style.display = "none";
+
+
  		channel_response = response;
  			chrome.tabs.query(query, checkCurrentURL);
 
@@ -330,6 +337,8 @@ $(document).ready(function(){
  	if(authorizeButton){
 		var bkg = chrome.extension.getBackgroundPage();
 		moderateButton.disabled = true;
+		analyticsButton.disabled = true;
+		vidStatistics.style.display = 'none;'
 		if(bkg){
 	 		getSignedInStatus();
 	 		$(authorizeButton).click(function(){
@@ -353,6 +362,8 @@ $(document).ready(function(){
 		                {'id': video_id,
 		                 'part': 'snippet,contentDetails,statistics'});
 		 			moderateButton.disabled = false;
+		 			analyticsButton.disabled = false;
+		 			vidStatistics.style.display = "block";
 
 		 			break;
 		 		}

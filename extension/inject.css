@@ -11,7 +11,7 @@ button{
 }
 
 /*INDEX PAGE*/
-#signout-button, #channel-button{
+#signout-button, #channel-button, #mainDiv, #vid-statistics{
 	/*background-color: black;*/
 	display: none;
 }
@@ -54,6 +54,12 @@ button{
 
 
 /*END OF INDEX PAGE*/
+
+#preloader{
+	margin-left: 40%;
+	margin-top: 40px;
+	z-index: 1;
+}
 
 
 /*MAIN DIV*/
@@ -100,3 +106,11 @@ button{
 	width: 100%;
 }
 
+#analytics-button{
+	width: 100%;
+}
+#analytics-button:hover{
+	background-color: #b2ebf2;
+	margin-top: 10px;
+	color: black;
+}
