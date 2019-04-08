@@ -47,7 +47,7 @@ $(document).ready(function(){
   const preloader = document.getElementById("preloader");
   const mainPage = document.getElementById("mainDiv");
   var channelId = 1;
-  var video_id = total_number_of_comments = total_number_of_views = 0;
+  var video_id = total_number_of_comments = total_number_of_views = total_processing_comments=total_processed_comments = if_moderated = 0;
   var video_title = uploads_id = text = text_id = "";
   var channel_response = {}
 
@@ -195,7 +195,13 @@ $(document).ready(function(){
 
 	function flagComment_request(request){
 		request.execute(function(response) {
-			bkg.console.log("flagged:" + text + " : " + text_id);
+			// bkg.console.log("flagging:" + total_processing_comments + " / " + total_processed_comments);
+			
+			if(total_processed_comments == total_processing_comments && if_moderated == 0){
+				alert("Video moderated!");
+				if_moderated = 1
+
+			}
 
 
 		});
@@ -217,6 +223,7 @@ $(document).ready(function(){
 		bkg.getServer(text).then(function(data){
 		    result = data;
 		    bkg.console.log(text, " : result - ", result)
+			total_processed_comments += 1;
 			if(result[0] != 2){
 			// bkg.console.log(" flagged!!!! " + text);
 			 buildApiRequest("flagComment_request",'POST',
@@ -224,7 +231,14 @@ $(document).ready(function(){
 			                {'id': text_id,
 			                 'moderationStatus': 'heldForReview'});
 			}
+			bkg.console.log("flagging:" + total_processing_comments + " / " + total_processed_comments);
+				
+			if(total_processed_comments == total_processing_comments && if_moderated == 0){
+				alert("Video moderated!");
+				if_moderated = 1;
+			}
 		});
+
 
 	}
 
@@ -242,6 +256,7 @@ $(document).ready(function(){
 				text = response.items[i].snippet.topLevelComment.snippet.textOriginal
 				if(!response.items[i].snippet.topLevelComment.snippet.hasOwnProperty("moderationStatus")){
 					bkg.console.log(i + " : " + response.items[i].snippet.topLevelComment.snippet.textOriginal);
+					total_processing_comments +=1
 					flagComment(text,text_id);
 				} 
 
@@ -253,6 +268,7 @@ $(document).ready(function(){
 					text = response.items[i].replies.comments[j].snippet.textOriginal;
 					if(!response.items[i].replies.comments[j].snippet.hasOwnProperty("moderationStatus")){
 						bkg.console.log("comment: " + response.items[i].replies.comments[j].snippet.textOriginal);
+						total_processing_comments +=1
 						flagComment(text,text_id);
 					} 
 				}
@@ -272,7 +288,7 @@ $(document).ready(function(){
 				// }
 			}
 
-			alert("Video Moderated!");
+			
 	    });
 		
 	}
