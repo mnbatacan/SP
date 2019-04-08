@@ -46,8 +46,10 @@ $(document).ready(function(){
   const videoTitle = document.getElementById("video-title");
   const preloader = document.getElementById("preloader");
   const mainPage = document.getElementById("mainDiv");
+  const moderateProgress = document.getElementById("moderate-progress");
   var channelId = 1;
-  var video_id = total_number_of_comments = total_number_of_views = total_processing_comments=total_processed_comments = if_moderated = 0;
+
+  var video_id = total_number_of_comments = total_number_of_views = total_processing_comments=total_processed_comments = if_moderated = total_flagged = 0;
   var video_title = uploads_id = text = text_id = "";
   var channel_response = {}
 
@@ -196,8 +198,9 @@ $(document).ready(function(){
 	function flagComment_request(request){
 		request.execute(function(response) {
 			// bkg.console.log("flagging:" + total_processing_comments + " / " + total_processed_comments);
-			
+			total_flagged += 1;
 			if(total_processed_comments == total_processing_comments && if_moderated == 0){
+				// alert("Video moderated!");
 				alert("Video moderated!");
 				if_moderated = 1
 
@@ -209,6 +212,7 @@ $(document).ready(function(){
 	}
 
 	function flagComment(text,text_id){
+		var total_percentage = 0;
 				//     if(result ==! 2){
 				// 	    // commentsSetModerationStatus({'id': text_id,
     //      //        		 'moderationStatus': 'heldForReview'});
@@ -224,6 +228,9 @@ $(document).ready(function(){
 		    result = data;
 		    bkg.console.log(text, " : result - ", result)
 			total_processed_comments += 1;
+			total_percentage = (total_processed_comments/total_processing_comments)*100
+			moderateProgress.style.width = (total_percentage.toString()).concat('%');
+
 			if(result[0] != 2){
 			// bkg.console.log(" flagged!!!! " + text);
 			 buildApiRequest("flagComment_request",'POST',
@@ -231,10 +238,13 @@ $(document).ready(function(){
 			                {'id': text_id,
 			                 'moderationStatus': 'heldForReview'});
 			}
-			bkg.console.log("flagging:" + total_processing_comments + " / " + total_processed_comments);
+			bkg.console.log("flagging:" + (total_percentage.toString()).concat('%'));
 				
 			if(total_processed_comments == total_processing_comments && if_moderated == 0){
-				alert("Video moderated!");
+				// alert("Video moderated!");
+				moderateProgress.style.width = "100%"
+				//SHOW STATS
+
 				if_moderated = 1;
 			}
 		});
@@ -361,6 +371,16 @@ $(document).ready(function(){
 		moderateButton.disabled = true;
 		analyticsButton.disabled = true;
 		vidStatistics.style.display = 'none;'
+		if_moderated = 0;
+		moderateProgress.style.width = "0%";
+
+		var script= document.createElement('script');
+		script.src = "https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css";
+		script.rel = "stylesheet";
+		document.head.appendChild(script);
+
+
+
 		if(bkg){
 	 		getSignedInStatus();
 	 		$(authorizeButton).click(function(){
@@ -420,7 +440,12 @@ $(document).ready(function(){
 		}
 	}
 
+
+
  	$(moderateButton).click(function(){
+ 		// show preloader
+ 		document.getElementById("progress-div").style.display = "block";
+ 		moderateButton.disabled = "true";
  		buildApiRequest("retrieveComments",'GET',
                 'https://www.googleapis.com/youtube/v3/commentThreads',
                 {'part': 'snippet,replies',
