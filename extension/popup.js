@@ -49,7 +49,7 @@ $(document).ready(function(){
   const moderateProgress = document.getElementById("moderate-progress");
   var channelId = 1;
 
-  var video_id = total_number_of_comments = total_number_of_views = total_processing_comments=total_processed_comments = if_moderated = total_flagged = 0;
+  var video_id = total_number_of_comments = total_number_of_views = total_processing_comments=total_processed_comments = if_moderated = total_flagged_1 = total_flagged_0 = 0;
   var video_title = uploads_id = text = text_id = "";
   var channel_response = {}
 
@@ -198,7 +198,6 @@ $(document).ready(function(){
 	function flagComment_request(request){
 		request.execute(function(response) {
 			// bkg.console.log("flagging:" + total_processing_comments + " / " + total_processed_comments);
-			total_flagged += 1;
 			if(total_processed_comments == total_processing_comments && if_moderated == 0){
 				// alert("Video moderated!");
 				alert("Video moderated!");
@@ -233,7 +232,10 @@ $(document).ready(function(){
 
 			if(result[0] != 2){
 			// bkg.console.log(" flagged!!!! " + text);
-			 buildApiRequest("flagComment_request",'POST',
+				if(result[0] == 1) total_flagged_1+=1;
+				else total_flagged_0 += 1;
+
+				buildApiRequest("flagComment_request",'POST',
 			                'https://www.googleapis.com/youtube/v3/comments/setModerationStatus',
 			                {'id': text_id,
 			                 'moderationStatus': 'heldForReview'});
@@ -242,8 +244,9 @@ $(document).ready(function(){
 				
 			if(total_processed_comments == total_processing_comments && if_moderated == 0){
 				// alert("Video moderated!");
-				moderateProgress.style.width = "100%"
+				moderateProgress.style.width = "100%";
 				//SHOW STATS
+				showStatistics();
 
 				if_moderated = 1;
 			}
@@ -438,6 +441,14 @@ $(document).ready(function(){
 
 
 		}
+	}
+
+	function showStatistics(){
+		document.getElementById("no-moderated-comments").innerHTML = total_processed_comments;
+		document.getElementById("no-neutral-comments").innerHTML = total_processed_comments-(total_flagged_1 + total_flagged_0);
+		document.getElementById("no-offensive-comments").innerHTML = total_flagged_1;
+		document.getElementById("no-hate-comments").innerHTML = total_flagged_0;
+
 	}
 
 
