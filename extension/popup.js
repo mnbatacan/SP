@@ -63,6 +63,7 @@ $(document).ready(function(){
 	    channelButton.style.display = 'block';
 	    // mainPage.style.display = 'block';
 	    preloader.style.display = 'block';
+	    document.getElementById("statistics-div").style.display = "none";
 	    // $(document).on('load', function() {
 	    // alert("asd")
      //        $('.preloader').delay(350).fadeOut('slow');
@@ -371,6 +372,7 @@ $(document).ready(function(){
 
  	if(authorizeButton){
 		var bkg = chrome.extension.getBackgroundPage();
+		// showStatistics();
 		moderateButton.disabled = true;
 		analyticsButton.disabled = true;
 		vidStatistics.style.display = 'none;'
@@ -444,7 +446,8 @@ $(document).ready(function(){
 	}
 
 	function showStatistics(){
-		document.getElementById("no-moderated-comments").innerHTML = total_processed_comments;
+		document.getElementById("statistics-div").style.display = "block";
+		document.getElementById("no-public-comments").innerHTML = total_processed_comments;
 		document.getElementById("no-neutral-comments").innerHTML = total_processed_comments-(total_flagged_1 + total_flagged_0);
 		document.getElementById("no-offensive-comments").innerHTML = total_flagged_1;
 		document.getElementById("no-hate-comments").innerHTML = total_flagged_0;

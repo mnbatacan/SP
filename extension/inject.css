@@ -62,6 +62,10 @@ button{
 }
 
 
+#video-card{
+	margin-top: -60px;
+}
+
 /*MAIN DIV*/
 #credentials-card{
 	padding-top: 10px;
@@ -113,4 +117,42 @@ button{
 	background-color: #b2ebf2;
 	margin-top: 10px;
 	color: black;
+}
+
+/*#statistics-div{
+	margin-top: 50px;
+}*/
+
+#statistics-div > .labels{
+	display: inline;
+	float: left;
+	/*text-align: center;*/
+	margin-left: 1%;
+    width: 32%;
+    text-align: center;
+	
+}
+
+#statistics-div > div:first-child {
+/*    margin-left: 0;
+    float: right;
+    display: block;*/
+    text-align: center;
+}
+
+
+#no-neutral-comments, #no-offensive-comments,#no-hate-comments,#no-public-comments{
+	/*float: left;*/
+	/*margin-left: 20px;*/
+	font-family: 'Cabin', sans-serif;
+	font-size: 20px;
+}
+
+
+#neutral-word, #offensive-word,#hate-word, #public-word{
+	/*float: left;*/
+	/*padding-right: 20px;*/
+	font-family: 'Signika', sans-serif;
+	font-size: 16px;
+	margin-top: -25px;
 }
