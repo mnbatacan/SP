@@ -3,9 +3,9 @@
 // Contains authorization, other main functions.
 // ----------------------------------------------------------------------------------------------
 
-
 $(document).ready(function(){
 	var bkg = chrome.extension.getBackgroundPage();
+	$('.dropdown-trigger').dropdown();
 
 
 	function getSignedInStatus(){
@@ -248,6 +248,10 @@ $(document).ready(function(){
 				moderateProgress.style.width = "100%";
 				//SHOW STATS
 				showStatistics();
+				// Save video id and stats dets
+		 		chrome.storage.sync.set({"video_id": video_id, "total_processed_comments":total_processed_comments,"total_flagged_1":total_flagged_1,"total_flagged_0":total_flagged_0}, function() {
+			          bkg.console.log('video_id is set to ' + video_id);
+			      });
 
 				if_moderated = 1;
 			}
@@ -345,7 +349,7 @@ $(document).ready(function(){
 		// showStatistics();
 		moderateButton.disabled = true;
 		analyticsButton.disabled = true;
-		vidStatistics.style.display = 'none;'
+		
 		if_moderated = 0;
 		moderateProgress.style.width = "0%";
 
@@ -358,6 +362,7 @@ $(document).ready(function(){
 
 		if(bkg){
 	 		getSignedInStatus();
+
 	 		$(authorizeButton).click(function(){
 		   		 $.loadScript("https://apis.google.com/js/api.js", handleClientLoad);
 		   	});
@@ -385,6 +390,17 @@ $(document).ready(function(){
 		 			break;
 		 		}
  			}
+
+ 			chrome.storage.sync.get(["video_id","total_processed_comments","total_flagged_1","total_flagged_0"], function(data) {
+	 			// alert(video_id);
+	 			if(video_id == data.video_id){
+	 				total_processed_comments = data.total_processed_comments;
+	 				total_flagged_1 = data.total_flagged_1;
+	 				total_flagged_0 = data.total_flagged_0
+	 				showStatistics();
+	 			} 
+	 			else document.getElementById("statistics-div").style.display = 'none';
+	 		});
  		});
 
 	}
@@ -430,6 +446,8 @@ $(document).ready(function(){
  		// show preloader
  		document.getElementById("progress-div").style.display = "block";
  		moderateButton.disabled = "true";
+
+ 		
  		buildApiRequest("retrieveComments",'GET',
                 'https://www.googleapis.com/youtube/v3/commentThreads',
                 {'part': 'snippet,replies',

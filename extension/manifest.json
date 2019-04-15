@@ -36,7 +36,7 @@
       "matches": ["https://www.youtube.com/watch?v=*","https://ytest-219100.appspot.com/"],
       // "matches": ["<all_urls >"],
       "css": ["inject.css"],
-      "js": ["jquery.js","index.js"],
+      "js": ["jquery.js"],
       "run_at": "document_end",
       "all_frames":true
     }

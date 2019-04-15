@@ -201,7 +201,7 @@ button{
 }
 
 
-#neutral-word, #offensive-word,#hate-word, #public-word{
+#neutral-word, #offensive_drp,#hate-word, #public-word{
 	/*float: left;*/
 	/*padding-right: 20px;*/
 	font-family: 'Signika', sans-serif;
