@@ -316,45 +316,15 @@ $(document).ready(function(){
 		gapi.load('client', {
 		    callback: function() {
 		      // Handle gapi.client initialization.
-		      bkg.console.log("handleClientLoad callback");
-
-		      	chrome.storage.sync.get("authToken", function(data) {
-			        if(data.authToken){ 
-			        	bkg.console.log("existing token: " + data.authToken);
-			        	chrome.identity.removeCachedAuthToken({token: data.authToken}, function(){
-			        		chrome.identity.getAuthToken({ 'interactive': true }, function(token) {
-					        // Use the token.
-						        bkg.console.log(token);
-						        // updateSigninStatus(true);
-						        setToken(token);
-						        
-
-						      });
-			        	})
-			        	// setToken(data.authToken);
-			        	// updateSigninStatus(true);
-			        }
-			        else{
-			        	bkg.console.log("not signed in - open identity")
-				        chrome.identity.getAuthToken({ 'interactive': true }, function(token) {
-					        // Use the token.
-					        bkg.console.log(token);
-					        // updateSigninStatus(true);
-					        setToken(token);
-					        
-
-					      });
+			    chrome.identity.getAuthToken({
+				    interactive: true
+				}, function(token) {
+				    if (chrome.runtime.lastError) {
+				        alert(chrome.runtime.lastError.message);
+				        return;
 				    }
-			    });
-
-
-		     
-		     //  	chrome.identity.onSignInChanged.addListener(function (account, signedIn) {
-				   //  bkg.console.log("HELLO:", account, signedIn);
-				   //  updateSigninStatus(true);
-			    // });
-
-
+				         setToken(token);
+				});
 		      
 		    },
 		    onerror: function() {
