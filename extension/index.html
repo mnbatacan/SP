@@ -7,7 +7,7 @@
     <script src="jquery.js" type="text/javascript"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
     <link rel="stylesheet" type="text/css" href="inject.css">
-    <link href="https://fonts.googleapis.com/css?family=Cabin:600|Catamaran:600|Signika:600" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Cabin:600|Catamaran:600|Signika:600|Lato" rel="stylesheet">
      	<!-- <script type="text/javascript" src="index.js"></script> -->
 
 
@@ -42,10 +42,10 @@
        <img id="logo" src="bleeped-logo.png" alt="bleeped logo" height="23px" width="140px">
        <div class="row">
         <div class="col s12 m5">
-          <div id="credentials-card" class="card-panel cyan lighten-2">
-            <h6 id="channel-name" class="white-text"></h6>
-            <p id="sub-count"><p> 
-            <img src="" id="channel-thumbnail"/>
+          <div id="credentials-card">
+            <p id="channel-name"></p>
+            <p id="sub-count"></p> 
+            <img src="" class="circular--square" id="channel-thumbnail"/>
             <div class="button-holder">
               <button type="button" class="waves-effect waves-light btn-flat" id="channel-button" style="font-size: 10px;">Go to Channel</button>
               <button type="button" class="waves-effect waves-light btn-flat" id="signout-button" style="font-size: 10px;">Sign out</button>
@@ -56,7 +56,6 @@
 
       <div  id="video-card" class="row">
         <div class="col s12 m5">
-          <div class="card-panel grey lighten-5">
             <h6 id="video-title"></h6>
             <div id="vid-statistics">
               <img id="like-button" src="like-button.png" alt="like button" height="10px" width="10px">
@@ -75,7 +74,6 @@
           <div>
             
           </div>
-        </div>
 
       </div>
 
@@ -108,10 +106,13 @@
 
             </div>
 
-      
+
 
 
     </div></div>
+
+
+    
     <script type="text/javascript" src="background.js"></script>
        <script type="text/javascript" src="popup.js"></script>
     <!-- <script type="text/javascript" src="inject.js"></script> -->
