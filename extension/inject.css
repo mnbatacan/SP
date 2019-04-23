@@ -244,3 +244,22 @@ button{
 	color:orange;
 	margin-top: -15%;
 }
+
+#collections-title{
+	font-family: 'Signika', sans-serif;
+	font-size: 13px;
+}
+
+#collections-name{
+	font-family: 'Cabin', sans-serif;
+	font-size: 12px;
+}
+
+#collections-img{
+	position: absolute;
+	margin-top: -6%;
+}
+
+/*#offensive-collections > li{
+	padding: 0px
+}*/

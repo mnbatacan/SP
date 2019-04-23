@@ -466,45 +466,61 @@ $(document).ready(function(){
 		document.getElementById("no-hate-comments").innerHTML = total_flagged_0;
 
 		//comments list show in dropdown
-		// if(list_offensive_comments != undefined){
-		// 	bkg.console.log(list_offensive_comments);
-		// 	for (var i = 0; i < list_offensive_comments.length; i++) {
-		// 		for (var key in list_offensive_comments[i]) {
-		// 		    // var temp = list_offensive_comments[i];
-		// 		    var ul = document.getElementById("offensive-word");
-		// 		    var li = document.createElement('li');
-		// 		    var img = document.createElement('img');
-		// 		    var p1 = document.createElement('p1');
-		// 		    var p2 = document.createElement('p2');
-		// 		    p1.innerHTML = key;
-		// 		    p1.id = "p1";
-		// 		    p2.innerHTML = list_offensive_comments[i][key].authorDisplayName;
-		// 		    p2.id = "p2";
-		// 		    img.src = list_offensive_comments[i][key].authorProfileImageUrl;
-		// 		    img.id = "img1";
-		// 		    img.class = "circular--square";
+		if(list_offensive_comments != undefined){
+			bkg.console.log(list_offensive_comments);
+			for (var i = 0; i < list_offensive_comments.length; i++) {
+				for (var key in list_offensive_comments[i]) {
+				    // var temp = list_offensive_comments[i];
+				    var ul = document.getElementById("offensive-collections");
+				    var li = document.createElement('li');
+				    var img = document.createElement('img');
+				    var span = document.createElement('span');
+				    var p = document.createElement('p');
+				    li.className="collection-item avatar";
+				    span.innerHTML = key;
+				    span.id = "collections-title";
+				    p.innerHTML = list_offensive_comments[i][key].authorDisplayName;
+				    p.id = "collections-name";
+				    img.src = list_offensive_comments[i][key].authorProfileImageUrl;
+				    img.id = "collections-img";
+				    img.className = "circle";
 
-		// 		    li.appendChild(p1);
-		// 		    li.appendChild(p2);
-		// 		    li.appendChild(img);
-		// 		    ul.appendChild(li);
+				    li.appendChild(p);
+				    li.appendChild(span);
+				    li.appendChild(img);
+				    ul.appendChild(li);
 
-		// 		}
-		// 	}
-		// }
+				}
+			}
+		}
 
-		// if(list_hate_comments != undefined){
-		// 	bkg.console.log(list_hate_comments);
-		// 	for (var i = 0; i < list_hate_comments.length; i++) {
-		// 		for (var key in list_hate_comments[i]) {
-		// 		    // var temp = list_hate_comments[i];
-		// 		    var ul = document.getElementById("hate-word");
-		// 		    var li = document.createElement('li');
-		// 		    li.appendChild(document.createTextNode(key));
-		// 		    ul.appendChild(li);
-		// 		}
-		// 	}
-		// }
+		if(list_hate_comments != undefined){
+			bkg.console.log(list_hate_comments);
+			for (var i = 0; i < list_hate_comments.length; i++) {
+				for (var key in list_hate_comments[i]) {
+				    // var temp = list_hate_comments[i];
+				    var ul = document.getElementById("hate-collections");
+				    var li = document.createElement('li');
+				    var img = document.createElement('img');
+				    var span = document.createElement('span');
+				    var p = document.createElement('p');
+				    li.className="collection-item avatar";
+				    span.innerHTML = key;
+				    span.id = "collections-title";
+				    p.innerHTML = list_hate_comments[i][key].authorDisplayName;
+				    p.id = "collections-name";
+				    img.src = list_hate_comments[i][key].authorProfileImageUrl;
+				    img.id = "collections-img";
+				    img.className = "circle";
+
+				    li.appendChild(p);
+				    li.appendChild(span);
+				    li.appendChild(img);
+				    ul.appendChild(li);
+
+				}
+			}
+		}
 
 
 	}
