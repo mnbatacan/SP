@@ -1,13 +1,13 @@
 {
  "manifest_version": 2,
- "name": "Ytest_exten",
- "description": "Automatic Yt comments moderator",
+ "name": "bleeped",
+ "description": "Automated Yt comments moderator",
  "version": "1",
- "author": "meme",
+ "author": "mnbatacan",
  "key":"MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAlpJsJCu4OMofK4KsQO1h322lJXh5d5bizlEiWO/JNITxbwCPASeFHFfRnSn8hqNudF1kp4tjYRUnpB6q9cXNFgX4dK7Cg3Wi5J5bHepQyhPzRpmXUSNatigfrbflPUvOezTboIbc46RgvnWC7ijD9bOmUrA7WgJNKm1Z2zp6xJzerNhPMaULjYxpVVff2UL4cJUlnzyEzsUXmOYMmclqV8VEVA+1guswNjh0R3o1vYPmkLifDUu8ov3FiNBSLRg3R70/AzlzCjUvYNhJQ+QFzps9wxtUTHDB/zJuXVFC+XugBm/tLT+8aTq9+PxS+RRsMHVn2VYhSddw7BCoN++NxQIDAQAB",
 "browser_action": {
-   "default_icon": "icon.png",
-   "default_title": "Have a good day",
+   "default_icon": "b-logo.png",
+   "default_title": "bleeped: Youtube Comments Moderator",
    "default_popup": "index.html"
  },
      "background": {

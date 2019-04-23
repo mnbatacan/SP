@@ -42,6 +42,7 @@ accuracy_sum = 0
 accuracy_average = 0
 # Read csv file then save to pandas dataframe
 df 	= pd.read_csv("dataset/main_dataset.csv")
+print(df.groupby('class').count())
 df = shuffle(df)
 df = df[pd.notnull(df['text'])]
 
@@ -69,7 +70,7 @@ pickle.dump(final_clf, open(filename, 'wb'),protocol=2)
 loaded_model = pickle.load(open(filename, 'rb'))
 predicted = loaded_model.predict(x_test)
 
-print(accuracy_score(y_test, predicted))
+print("accuracy: ", accuracy_score(y_test, predicted))
 precision, recall, fscore, support = score(y_test, predicted)
 
 print('precision: {}'.format(precision))

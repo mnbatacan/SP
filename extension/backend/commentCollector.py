@@ -1,6 +1,3 @@
-
-from youtube_videos import youtube_search
-from youtube_videos import get_comment_threads
 # import pandas as pd
 import string; print(string.__file__)
 import json
@@ -28,7 +25,7 @@ from bs4 import BeautifulSoup
 from nltk import word_tokenize, sent_tokenize
 from nltk.corpus import stopwords
 from nltk.stem import LancasterStemmer, WordNetLemmatizer, PorterStemmer
-import textblob as tb
+from textblob import TextBlob
 from bs4 import BeautifulSoup
 
 
@@ -106,6 +103,7 @@ def preproccessing(text):
     text = remove_emoji(text)
     text = remove_usernames(text)
     text = p.clean(text)
+    text = str(TextBlob(text).correct())
     # print("hey: " + text)
     # text =  replace_contractions(preprocess_text(text))
     # text = preprocess_text(text)
@@ -125,47 +123,10 @@ def preproccessing(text):
 
 
 
-def grab_videos(keyword, token=None):
-    global dataset_file, curr_doc_count
-    res = youtube_search(keyword, token=token)
-    # statistics.commentCount 
-    if(res != 0):
-        token = res[0]
-        videos = res[1]
-        for vid in videos:
-            video_dict['youID'].append(vid['id']['videoId'])
-            video_dict['title'].append(vid['snippet']['title'])
-            video_dict['pub_date'].append(vid['snippet']['publishedAt'])
-            video_dict['pub_date'].append(vid['snippet']['publishedAt'])
-            try: video_comment_threads = get_comment_threads(vid['id']['videoId'])
-            except Exception as e: continue
-
-            for item in video_comment_threads:
-                comment = item["snippet"]["topLevelComment"]
-                author = comment["snippet"]["authorDisplayName"]
-                text = comment["snippet"]["textDisplay"]
-
-                # Preprocessing ---------------------------------------------------------------
-                text = preproccessing(text)
-                # word_set['words'][1].apply(lambda x: str(TextBlob(x).correct()))
-                # apply(lambda x: str(TextBlob(x).correct()))
-
-
-
-                #-------------- ---------------------------------------------------------------
-                print("COUNT:" + str(curr_doc_count)+ " " + text)
-                dataset_file.write(text+'\n')
-                curr_doc_count += 1
-
-                comments_list.append(text)
-        # print "added " + str(len(videos)) + " videos to a total of " + str(len(video_dict['youID']))
-        return token
-    return 0
-
 
 def csv_collector():
     global dataset_file, curr_doc_count,dataset_class
-    with open('dataset/twitter_classified.csv') as csv_file:
+    with open('dataset/main_dataset.csv') as csv_file:
         csv_reader = csv.reader(csv_file, delimiter=',')
         line_count = 0
         for row in csv_reader:
@@ -185,32 +146,32 @@ def csv_collector():
             line_count += 1
             print(line_count)
 
-    with open('dataset/labeled_data.csv') as csv_file2:
-        csv_reader2 = csv.reader(csv_file2, delimiter=',')
-        # line_count = 0
-        flag = 0
-        for row in csv_reader2:
-            if flag == 0: 
-                flag = 1
-                continue
+    # with open('dataset/labeled_data.csv') as csv_file2:
+    #     csv_reader2 = csv.reader(csv_file2, delimiter=',')
+    #     # line_count = 0
+    #     flag = 0
+    #     for row in csv_reader2:
+    #         if flag == 0: 
+    #             flag = 1
+    #             continue
 
-            if line_count == 25001:
-                break
+    #         if line_count == 25001:
+    #             break
 
-            # if line_count == 20:
-            #     break
-            # else:
-                # print(f'\t{row[0]} : {row[2]}.')
-            temp_class = int(row[0])
-            if(line_count >= 22000 and line_count <=25000 and temp_class != 0): continue
-            text = preproccessing(row[1])
-            dataset_file.write(text+'\n')
-            curr_doc_count += 1
-            comments_list.append(text)
+    #         # if line_count == 20:
+    #         #     break
+    #         # else:
+    #             # print(f'\t{row[0]} : {row[2]}.')
+    #         temp_class = int(row[0])
+    #         if(line_count >= 22000 and line_count <=25000 and temp_class != 0): continue
+    #         text = preproccessing(row[1])
+    #         dataset_file.write(text+'\n')
+    #         curr_doc_count += 1
+    #         comments_list.append(text)
 
-            dataset_class.append(temp_class)
-            line_count += 1
-            print(line_count)
+    #         dataset_class.append(temp_class)
+    #         line_count += 1
+    #         print(line_count)
 
     print(f'Processed {line_count} lines.')
 
@@ -234,7 +195,7 @@ def write_complete_dataset():
 
     print("dataset loaded")
 
-    with open('dataset/main_dataset.csv', mode='w') as main_dataset:
+    with open('dataset/main_datasetTRY.csv', mode='w') as main_dataset:
         writer = csv.writer(main_dataset, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
 
         writer.writerow(['class', 'text'])
@@ -252,7 +213,7 @@ def write_complete_dataset():
 
 
 
-# dataset_file  = open("dataset.txt", "w") 
+dataset_file  = open("dataset.txt", "w") 
 
 # ---------------------------------------------------------------------------------------------
 # To search a video
@@ -265,7 +226,7 @@ def write_complete_dataset():
 
 
 
-# csv_collector()
+csv_collector()
 # with open('dataset_class.txt', 'w') as dataset_class_file:
 #     dataset_class_file.write(json.dumps(dataset_class))
 

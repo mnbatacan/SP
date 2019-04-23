@@ -5,7 +5,8 @@
 
 $(document).ready(function(){
 	var bkg = chrome.extension.getBackgroundPage();
-	$('.dropdown-trigger').dropdown();
+	// $('.dropdown-trigger').dropdown();
+	$('.tabs').tabs();
 
 
 	function getSignedInStatus(){
@@ -36,7 +37,6 @@ $(document).ready(function(){
 
 
   const authorizeButton = document.getElementById("authorize-button");
-  const signoutButton = document.getElementById("signout-button");
   const channelButton = document.getElementById("channel-button");
   const analyticsButton = document.getElementById("analytics-button");
 
@@ -61,7 +61,6 @@ $(document).ready(function(){
 	  if (isSignedIn) {
 	    authorizeButton.style.display = 'none';
 	    indexPage.style.display = 'none';
-	    signoutButton.style.display = 'block';
 	    channelButton.style.display = 'block';
 	    // mainPage.style.display = 'block';
 	    preloader.style.display = 'block';
@@ -75,7 +74,6 @@ $(document).ready(function(){
 	  } else {
 	    authorizeButton.style.display = 'block';
 	    indexPage.style.display = 'block';
-	    signoutButton.style.display = 'none';
 	    channelButton.style.display = 'none';
 	    moderateButton.style.display = 'none';
 	    mainPage.style.display = 'none';
@@ -166,17 +164,17 @@ $(document).ready(function(){
 	}
 
 
-	function flagComment(request) {
-	    request.execute(function(response) {
-	    	if (typeof response === 'undefined') {
-			  // color is undefined
-			  bkg.console.log("comment was flagged!");
-			}else{
-				bkg.console.log("unsuccessful!");
-			}
+	// function flagComment(request) {
+	//     request.execute(function(response) {
+	//     	if (typeof response === 'undefined') {
+	// 		  // color is undefined
+	// 		  bkg.console.log("comment was flagged!");
+	// 		}else{
+	// 			bkg.console.log("unsuccessful!");
+	// 		}
 	      
-	    });
-	}
+	//     });
+	// }
 
 	function getVideoDetails(request){
 		request.execute(function(response) {
@@ -191,12 +189,12 @@ $(document).ready(function(){
 		});
 	}
 
-	function commentsSetModerationStatus(params) {
-		bkg.console.log(params);
-	  params = removeEmptyParams(params); // See full sample for function
-	  var request = gapi.client.youtube.comments.setModerationStatus(params);
-	  flagComment(request);
-	}
+	// function commentsSetModerationStatus(params) {
+	// 	bkg.console.log(params);
+	//   params = removeEmptyParams(params); // See full sample for function
+	//   var request = gapi.client.youtube.comments.setModerationStatus(params);
+	//   flagComment(request);
+	// }
 
 	function flagComment_request(request){
 		request.execute(function(response) {
@@ -213,7 +211,7 @@ $(document).ready(function(){
 
 	}
 
-	function flagComment(text,text_id){
+	function flagComment(text,text_details){
 		var total_percentage = 0;
 				//     if(result ==! 2){
 				// 	    // commentsSetModerationStatus({'id': text_id,
@@ -237,12 +235,17 @@ $(document).ready(function(){
 				if(result[0] == 1){ 
 					total_flagged_1+=1;
 					bkg.console.log("add list: " + text);
-					list_offensive_comments.push(text);
+					var obj = {};
+					obj[text] = text_details;
+					list_offensive_comments.push(obj);
 
 				}
 				else{ 
 					total_flagged_0 += 1;
-					list_hate_comments.push(text);
+					var obj = {};
+					obj[text] = text_details;
+					list_hate_comments.push(obj);
+					bkg.console.log("add list: " + list_hate_comments);
 				}
 
 				buildApiRequest("flagComment_request",'POST',
@@ -285,7 +288,7 @@ $(document).ready(function(){
 				if(!response.items[i].snippet.topLevelComment.snippet.hasOwnProperty("moderationStatus")){
 					bkg.console.log(i + " : " + response.items[i].snippet.topLevelComment.snippet.textOriginal);
 					total_processing_comments +=1
-					flagComment(text,text_id);
+					flagComment(text,response.items[i].snippet.topLevelComment.snippet);
 				} 
 
 
@@ -297,7 +300,7 @@ $(document).ready(function(){
 					if(!response.items[i].replies.comments[j].snippet.hasOwnProperty("moderationStatus")){
 						bkg.console.log("comment: " + response.items[i].replies.comments[j].snippet.textOriginal);
 						total_processing_comments +=1
-						flagComment(text,text_id);
+						flagComment(text,response.items[i].replies.comments[j].snippet);
 					} 
 				}
 				// var i = 1;
@@ -423,7 +426,19 @@ $(document).ready(function(){
 		// moderateButton.disabled = true;
 		if(currentTab.url.indexOf("v=") !== -1){
 			video_id = currentTab.url.split('v=')[1];
-			bkg.console.log("video id:" + video_id);
+
+			chrome.storage.sync.get("video_id", function(data) {
+		        if(data.video_id == video_id){}
+		        else{
+					bkg.console.log("--video id:" + video_id);
+		        	chrome.storage.sync.set({"video_id": data.video_id}, function() {
+			   			document.getElementById("statistics-div").style.display = 'none';
+					});
+
+		        }
+		    });
+
+			
 
 			$(analyticsButton).click(function(){
 		        chrome.tabs.create({ 
@@ -451,27 +466,45 @@ $(document).ready(function(){
 		document.getElementById("no-hate-comments").innerHTML = total_flagged_0;
 
 		//comments list show in dropdown
-		if(list_offensive_comments != undefined){
-			bkg.console.log(list_offensive_comments);
-			for (var i = 0; i < list_offensive_comments.length; i++) {
-			    var temp = list_offensive_comments[i];
-			    var ul = document.getElementById("offensive-word");
-			    var li = document.createElement('li');
-			    li.appendChild(document.createTextNode(temp));
-			    ul.appendChild(li);
-			}
-		}
+		// if(list_offensive_comments != undefined){
+		// 	bkg.console.log(list_offensive_comments);
+		// 	for (var i = 0; i < list_offensive_comments.length; i++) {
+		// 		for (var key in list_offensive_comments[i]) {
+		// 		    // var temp = list_offensive_comments[i];
+		// 		    var ul = document.getElementById("offensive-word");
+		// 		    var li = document.createElement('li');
+		// 		    var img = document.createElement('img');
+		// 		    var p1 = document.createElement('p1');
+		// 		    var p2 = document.createElement('p2');
+		// 		    p1.innerHTML = key;
+		// 		    p1.id = "p1";
+		// 		    p2.innerHTML = list_offensive_comments[i][key].authorDisplayName;
+		// 		    p2.id = "p2";
+		// 		    img.src = list_offensive_comments[i][key].authorProfileImageUrl;
+		// 		    img.id = "img1";
+		// 		    img.class = "circular--square";
 
-		if(list_hate_comments != undefined){
-			bkg.console.log(list_hate_comments);
-			for (var i = 0; i < list_hate_comments.length; i++) {
-			    var temp = list_hate_comments[i];
-			    var ul = document.getElementById("hate-word");
-			    var li = document.createElement('li');
-			    li.appendChild(document.createTextNode(temp));
-			    ul.appendChild(li);
-			}
-		}
+		// 		    li.appendChild(p1);
+		// 		    li.appendChild(p2);
+		// 		    li.appendChild(img);
+		// 		    ul.appendChild(li);
+
+		// 		}
+		// 	}
+		// }
+
+		// if(list_hate_comments != undefined){
+		// 	bkg.console.log(list_hate_comments);
+		// 	for (var i = 0; i < list_hate_comments.length; i++) {
+		// 		for (var key in list_hate_comments[i]) {
+		// 		    // var temp = list_hate_comments[i];
+		// 		    var ul = document.getElementById("hate-word");
+		// 		    var li = document.createElement('li');
+		// 		    li.appendChild(document.createTextNode(key));
+		// 		    ul.appendChild(li);
+		// 		}
+		// 	}
+		// }
 
 
 	}
@@ -482,6 +515,12 @@ $(document).ready(function(){
  		// show preloader
  		document.getElementById("progress-div").style.display = "block";
  		moderateButton.disabled = "true";
+
+ 		document.getElementById("statistics-div").style.display = "none";
+ 		total_number_of_comments = total_number_of_views = total_processing_comments=total_processed_comments = if_moderated = total_flagged_1 = total_flagged_0 = 0;
+ 		list_offensive_comments.length = 0;
+  		list_hate_comments.length = 0;
+
 
  		
  		buildApiRequest("retrieveComments",'GET',
