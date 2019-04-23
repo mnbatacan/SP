@@ -263,3 +263,26 @@ button{
 /*#offensive-collections > li{
 	padding: 0px
 }*/
+
+
+#toast-container{
+	  top: 10%; 
+  left: auto !important;
+  bottom: auto !important;
+  right:7%;  
+   min-width: 10%;
+  /*width: 10%;*/
+}
+
+#delete-offensive-button. #delete-hate-button{
+	width: 100%;
+}
+
+form > p{
+	display: inline;
+	float: left;
+	text-align: center;
+	margin-left: 10%;
+    width: 32%;
+    text-align: center;
+}
