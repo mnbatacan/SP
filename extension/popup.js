@@ -215,7 +215,7 @@ $(document).ready(function(){
 
 	function deleteComment(request){
 		request.execute(function(response) {
-
+				bkg.console.log("deleted");
 		});
 
 	}
@@ -589,9 +589,13 @@ $(document).ready(function(){
        	for (var i = 0; i < list_offensive_comments.length; i++) {
 			for (var key in list_offensive_comments[i]) {
 				bkg.console.log("deleting" + list_offensive_comments[i][key].id);
-				buildApiRequest("deleteComment",'DELETE',
-			                'https://www.googleapis.com/youtube/v3/comments',
-			                {'id': list_offensive_comments[i][key].id});
+				// buildApiRequest("deleteComment",'DELETE',
+			 //                'https://www.googleapis.com/youtube/v3/comments',
+			 //                {'id': list_offensive_comments[i][key].id});
+				buildApiRequest("flagComment_request",'POST',
+			                'https://www.googleapis.com/youtube/v3/comments/setModerationStatus',
+			                {'id': list_offensive_comments[i][key].id,
+			                 'moderationStatus': 'rejected'});
 
 
 
@@ -612,9 +616,10 @@ $(document).ready(function(){
        	for (var i = 0; i < list_hate_comments.length; i++) {
 			for (var key in list_hate_comments[i]) {
 				bkg.console.log("deleting: length: " + list_hate_comments.length + " id: " + list_hate_comments[i][key].id);
-				buildApiRequest("deleteComment",'DELETE',
-			                'https://www.googleapis.com/youtube/v3/comments',
-			                {'id': list_hate_comments[i][key].id});
+				buildApiRequest("flagComment_request",'POST',
+			                'https://www.googleapis.com/youtube/v3/comments/setModerationStatus',
+			                {'id': list_hate_comments[i][key].id,
+			                 'moderationStatus': 'rejected'});
 
 
 
