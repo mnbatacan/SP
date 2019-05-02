@@ -11,7 +11,7 @@ button{
 }
 
 /*INDEX PAGE*/
-#signout-button, #channel-button, #mainDiv, #vid-statistics,#progress-div{
+#signout-button, #channel-button, #mainDiv, #vid-statistics,#progress-div,#help-page{
 	/*background-color: black;*/
 	display: none;
 }
